@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
  * 
  */
 @Controller
-@RequestMapping("/rest/weixinmp")
+@RequestMapping("/wx")
 public class WxController {
 	private static final Logger log = Logger.getLogger(WxController.class);
 	

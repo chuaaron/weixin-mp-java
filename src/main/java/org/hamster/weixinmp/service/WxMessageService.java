@@ -74,7 +74,9 @@ public class WxMessageService {
 	
 	public WxBaseRespEntity handleMessage(WxBaseMsgEntity msg) {
 		List<WxMessageHandlerIfc> handlerList = new ArrayList<WxMessageHandlerIfc>();
-		handlerList.addAll(handlers);
+		if(handlers != null) {
+			handlerList.addAll(handlers);
+		}
 		Collections.sort(handlerList, new WxMessageHandlerComparator());
 		
 		Map<String, Object> context = new HashMap<String, Object>();
