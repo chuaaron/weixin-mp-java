@@ -29,7 +29,7 @@ import org.junit.Test;
  */
 public class WxControllerManualTest {
 	
-	public static final String WX_URL = "http://localhost:8080/rest/weixinmp";
+	public static final String WX_URL = "http://localhost:8085/lcwx/wx";
 	
 	@Test 
 	@Ignore

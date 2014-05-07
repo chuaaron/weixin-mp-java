@@ -47,7 +47,7 @@ public class WxController {
 		return null;
 	}
 
-	@RequestMapping(method = RequestMethod.POST)
+	@RequestMapping(method = RequestMethod.POST, produces = {"text/plain;charset=UTF-8"})
 	public @ResponseBody
 	String post(@RequestBody String requestBody) throws DocumentException, WxException {
 		WxBaseMsgEntity msg = messageService.parseXML(requestBody);

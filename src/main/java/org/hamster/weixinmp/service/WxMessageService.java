@@ -42,6 +42,9 @@ public class WxMessageService {
 	@Autowired(required=false)
 	List<WxMessageHandlerIfc> handlers;
 	
+	@Autowired(required=false)
+	private WxStorageService wxStorageService;
+	
 	public WxBaseMsgEntity parseXML(String xml) throws DocumentException,
 			WxException {
 		Element ele = DocumentHelper.parseText(xml).getRootElement();
@@ -52,14 +55,19 @@ public class WxMessageService {
 		WxMsgTypeEnum msgTypeEnum = WxMsgTypeEnum.inst(msgType);
 		switch (msgTypeEnum) {
 		case EVENT:
+			wxStorageService.saveMsgEvent(ele);
 			return WxXmlUtil.getMsgEvent(ele);
 		case IMAGE:
+			wxStorageService.saveMsgImg(ele);
 			return WxXmlUtil.getMsgImage(ele);
 		case LINK:
+			wxStorageService.saveMsgLink(ele);
 			return WxXmlUtil.getMsgLink(ele);
 		case LOCATION:
+			wxStorageService.saveMsgLoc(ele);
 			return WxXmlUtil.getMsgLoc(ele);
 		case TEXT:
+			wxStorageService.saveMsgText(ele);
 			return WxXmlUtil.getMsgText(ele);
 		case VIDEO:
 			return WxXmlUtil.getMsgVideo(ele);
@@ -114,7 +122,7 @@ public class WxMessageService {
 	
 	protected WxRespTextEntity defaultResult(String fromUserName, String toUserName) {
 		WxRespTextEntity result = new WxRespTextEntity();
-		result.setContent("您好,您的消息已收到.");
+		result.setContent("hello, received your message. 您好,您的消息已收到.");
 		result.setCreatedDate(new Date());
 		result.setCreateTime(new Date().getTime() / 1000);
 		result.setFromUserName(fromUserName);
