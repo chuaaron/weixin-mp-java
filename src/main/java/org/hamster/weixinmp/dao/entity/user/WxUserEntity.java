@@ -5,6 +5,7 @@ package org.hamster.weixinmp.dao.entity.user;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 import lombok.Data;
@@ -22,6 +23,7 @@ import com.google.gson.annotations.SerializedName;
  * 
  */
 @Entity
+@NamedQuery(name = "WxUserEntity.findByOpenId", query = "select u from WxUserEntity u where u.openId = ?1")
 @Table(name = WxConfig.TABLE_PREFIX + "user")
 @Data
 @ToString(callSuper = true)
