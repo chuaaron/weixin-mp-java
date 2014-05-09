@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>weixin-mp</artifactId>
 	<name>Weixin Multi Platform</name>
-	<version>1.0.2</version>
+	<version>1.0.3-SNAPSHOT</version>
 	<groupId>org.hamster</groupId>
 	<properties>
 		<!-- version definitions of dependencies -->
@@ -283,6 +283,17 @@
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
 			<version>${mysql.version}</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.codehaus.jackson</groupId>
+			<artifactId>jackson-mapper-asl</artifactId>
+			<version>1.9.11</version>
+		</dependency>
+		<dependency>
+			<groupId>org.codehaus.jackson</groupId>
+			<artifactId>jackson-core-asl</artifactId>
+			<version>1.9.11</version>
 		</dependency>
 
 	</dependencies>

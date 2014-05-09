@@ -21,6 +21,7 @@ import org.hamster.weixinmp.service.WxStorageService;
 import org.hamster.weixinmp.service.WxUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -96,6 +97,12 @@ public class WxController {
 		resp = messageService.handleMessage(msg);
 
 		return messageService.parseRespXML(resp).asXML();
+	}
+
+	@RequestMapping(value = "/users/{id}", method = RequestMethod.GET, produces = { "application/json;charset=UTF-8" })
+	public @ResponseBody
+	WxUserEntity getUserById(@PathVariable("id") Long id) {
+		return userDao.findOne(id);
 	}
 
 }
