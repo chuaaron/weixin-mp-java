@@ -4,6 +4,7 @@
 package org.hamster.weixinmp.dao.entity.msg;
 
 import javax.persistence.Column;
+import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
@@ -12,6 +13,7 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 import org.hamster.weixinmp.config.WxConfig;
+import org.hamster.weixinmp.constant.WxMsgType;
 import org.hamster.weixinmp.dao.entity.base.WxBaseMsgEntity;
 
 /**
@@ -21,6 +23,7 @@ import org.hamster.weixinmp.dao.entity.base.WxBaseMsgEntity;
  */
 @Entity
 @Table(name = WxConfig.TABLE_PREFIX + "msg_event")
+@DiscriminatorValue(WxMsgType.EVENT)
 @Data
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
@@ -35,6 +38,6 @@ public class WxMsgEventEntity extends WxBaseMsgEntity {
 	private Double latitude;
 	@Column(name = "longitude", nullable = true)
 	private Double longitude;
-	@Column(name = "precision", nullable = true)
+	@Column(name = "precisi", nullable = true)
 	private Double precision;
 }
