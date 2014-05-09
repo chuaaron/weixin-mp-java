@@ -3,6 +3,9 @@
  */
 package org.hamster.weixinmp.controller;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.log4j.Logger;
 import org.dom4j.DocumentException;
 import org.hamster.weixinmp.config.WxConfig;
@@ -103,6 +106,16 @@ public class WxController {
 	public @ResponseBody
 	WxUserEntity getUserById(@PathVariable("id") Long id) {
 		return userDao.findOne(id);
+	}
+
+	@RequestMapping(value = "/users", method = RequestMethod.GET, produces = { "application/json;charset=UTF-8" })
+	public @ResponseBody
+	List<WxUserEntity> getUsers() {
+		List<WxUserEntity> users = new ArrayList<WxUserEntity>();
+		for (WxUserEntity user : userDao.findAll()) {
+			users.add(user);
+		}
+		return users;
 	}
 
 }
