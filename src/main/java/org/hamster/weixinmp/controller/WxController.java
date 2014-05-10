@@ -132,7 +132,7 @@ public class WxController {
 			@RequestParam String agentId) {
 		Map<String, List<WxMsgTextEntity>> msgMap = new HashMap<String, List<WxMsgTextEntity>>();
 		List<WxMsgTextEntity> msgs = new ArrayList<WxMsgTextEntity>();
-		for (WxMsgTextEntity msg : messageTextDao.findAll()) {
+		for (WxMsgTextEntity msg : messageTextDao.findByOpenId(userId, agentId)) {
 			msgs.add(msg);
 		}
 		msgMap.put("messages", msgs);
