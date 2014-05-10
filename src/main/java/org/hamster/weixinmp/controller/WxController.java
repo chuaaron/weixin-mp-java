@@ -4,7 +4,9 @@
 package org.hamster.weixinmp.controller;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.dom4j.DocumentException;
@@ -110,12 +112,14 @@ public class WxController {
 
 	@RequestMapping(value = "/users", method = RequestMethod.GET, produces = { "application/json;charset=UTF-8" })
 	public @ResponseBody
-	List<WxUserEntity> getUsers() {
+	Map<String, List<WxUserEntity>> getUsers() {
+		Map<String, List<WxUserEntity>> userMap = new HashMap<String, List<WxUserEntity>>();
 		List<WxUserEntity> users = new ArrayList<WxUserEntity>();
 		for (WxUserEntity user : userDao.findAll()) {
 			users.add(user);
 		}
-		return users;
+		userMap.put("users", users);
+		return userMap;
 	}
 
 }
