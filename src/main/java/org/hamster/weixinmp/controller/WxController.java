@@ -16,8 +16,10 @@ import org.hamster.weixinmp.dao.entity.auth.WxAuth;
 import org.hamster.weixinmp.dao.entity.base.WxBaseMsgEntity;
 import org.hamster.weixinmp.dao.entity.base.WxBaseRespEntity;
 import org.hamster.weixinmp.dao.entity.msg.WxMsgEventEntity;
+import org.hamster.weixinmp.dao.entity.msg.WxMsgTextEntity;
 import org.hamster.weixinmp.dao.entity.user.WxUserEntity;
 import org.hamster.weixinmp.dao.repository.auth.WxAuthDao;
+import org.hamster.weixinmp.dao.repository.msg.WxMsgTextDao;
 import org.hamster.weixinmp.dao.repository.user.WxUserDao;
 import org.hamster.weixinmp.exception.WxException;
 import org.hamster.weixinmp.service.WxAuthService;
@@ -55,6 +57,8 @@ public class WxController {
 	private WxAuthService authService;
 	@Autowired
 	private WxMessageService messageService;
+	@Autowired
+	private WxMsgTextDao messageTextDao;
 	@Autowired
 	private WxStorageService storageService;
 
@@ -120,6 +124,19 @@ public class WxController {
 		}
 		userMap.put("users", users);
 		return userMap;
+	}
+
+	@RequestMapping(value = "/messages", method = RequestMethod.GET, produces = { "application/json;charset=UTF-8" })
+	public @ResponseBody
+	Map<String, List<WxMsgTextEntity>> getMessages(@RequestParam String userId,
+			@RequestParam String agentId) {
+		Map<String, List<WxMsgTextEntity>> msgMap = new HashMap<String, List<WxMsgTextEntity>>();
+		List<WxMsgTextEntity> msgs = new ArrayList<WxMsgTextEntity>();
+		for (WxMsgTextEntity msg : messageTextDao.findAll()) {
+			msgs.add(msg);
+		}
+		msgMap.put("messages", msgs);
+		return msgMap;
 	}
 
 }
