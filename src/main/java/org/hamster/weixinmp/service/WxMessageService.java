@@ -145,7 +145,7 @@ public class WxMessageService {
 	public WxRespCode sendMessage(String accessToken, String toUserName,
 			String content) throws WxException {
 		Map<String, Object> requestJson = new HashMap<String, Object>();
-		requestJson.put("toUser", toUserName);
+		requestJson.put("touser", toUserName);
 		requestJson.put("msgtype", "text");
 		Map<String, Object> textJson = new HashMap<String, Object>();
 		textJson.put("content", content);
