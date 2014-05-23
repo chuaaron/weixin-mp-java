@@ -9,7 +9,7 @@
 	<properties>
 		<!-- version definitions of dependencies -->
 		<lombok.version>1.12.6</lombok.version>
-		<spring-data-jpa.version>1.5.2.RELEASE</spring-data-jpa.version>
+		<spring-data-jpa.version>1.6.0.RELEASE</spring-data-jpa.version>
 		<cglib.version>2.2.2</cglib.version>
 		<spring.version>4.0.3.RELEASE</spring.version>
 		<slf4j.version>1.7.2</slf4j.version>
@@ -17,7 +17,7 @@
 		<commons-io.version>2.4</commons-io.version>
 		<httpclient.version>4.3.1</httpclient.version>
 		<commons-lang3.version>3.1</commons-lang3.version>
-		<hibernate.version>4.1.8.Final</hibernate.version>
+		<hibernate.version>4.3.5.Final</hibernate.version>
 		<commons-httpclient.version>3.0.1</commons-httpclient.version>
 		<h2.version>1.3.170</h2.version>
 		<junit.version>4.11</junit.version>
