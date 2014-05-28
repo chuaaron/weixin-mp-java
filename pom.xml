@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>weixin-mp</artifactId>
 	<name>Weixin Multi Platform</name>
-	<version>1.0.3-SNAPSHOT</version>
+	<version>1.0.3</version>
 	<groupId>org.hamster</groupId>
 	<properties>
 		<!-- version definitions of dependencies -->
@@ -27,7 +27,7 @@
 
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-		<java-version>1.7</java-version>
+		<java-version>1.6</java-version>
 	</properties>
 
 	<dependencyManagement>
