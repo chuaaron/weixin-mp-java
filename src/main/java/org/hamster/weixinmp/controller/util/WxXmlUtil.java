@@ -124,7 +124,7 @@ public class WxXmlUtil {
 	 * @throws DocumentException
 	 */
 	public static WxMsgVoiceEntity getMsgVoice(Element ele) throws DocumentException {
-		WxMsgVoiceEntity result = msgEntityFactory(WxMsgVideoEntity.class, ele);
+		WxMsgVoiceEntity result = msgEntityFactory(WxMsgVoiceEntity.class, ele);
 		WxItemVoiceEntity voice = new WxItemVoiceEntity();
 		voice.setMediaId(strVal(ele, "MediaId"));
 		voice.setFormat(strVal(ele, "Format"));
