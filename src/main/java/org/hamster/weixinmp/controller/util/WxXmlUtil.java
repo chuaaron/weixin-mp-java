@@ -75,7 +75,6 @@ public class WxXmlUtil {
 	 */
 	public static WxMsgTextEntity getMsgText(Element ele) throws DocumentException {
 		WxMsgTextEntity result = msgEntityFactory(WxMsgTextEntity.class, ele);
-		result.setMsgId(longVal(ele, "MsgId"));
 		result.setContent(strVal(ele, "Content"));
 		return result;
 	}
@@ -447,7 +446,7 @@ public class WxXmlUtil {
 			result.setCreateTime(longVal(ele, "CreateTime"));
 			result.setCreatedDate(new Date());
 			result.setMsgType(strVal(ele, "MsgType"));
-			if (ele.element("MsgId") != null) {
+			if (ele.element("MsgId") != null && !"".equals(ele.element("MsgId").getStringValue())) {
 				result.setMsgId(longVal(ele, "MsgId"));
 			}
 			return (T) result;
