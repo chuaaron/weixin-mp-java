@@ -7,6 +7,9 @@ import static org.hamster.weixinmp.util.WxUtil.getAccessTokenParams;
 import static org.hamster.weixinmp.util.WxUtil.sendRequest;
 import static org.hamster.weixinmp.util.WxUtil.toJsonStringEntity;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -15,6 +18,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpRequestBase;
+import org.apache.http.client.utils.URIBuilder;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.dom4j.DocumentException;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
@@ -156,6 +165,26 @@ public class WxMessageService {
 				toJsonStringEntity(requestJson), WxRespCode.class);
 
 		return result;
+	}
+	
+	public InputStream downloadMedia(String accessToken, String mediaId) throws WxException {
+		HttpClient client = HttpClientBuilder.create().build();
+		HttpRequestBase request = new HttpGet();
+		
+		try {
+			URIBuilder builder = new URIBuilder("http://file.api.weixin.qq.com/cgi-bin/media/get");
+			builder.addParameter("access_token", accessToken);
+			builder.addParameter("media_id", mediaId);
+			request.setURI(builder.build());
+			
+			HttpResponse response = client.execute(request);
+			
+			return response.getEntity().getContent();
+		} catch (IOException e) {
+			throw new WxException(e);
+		} catch (URISyntaxException e) {
+			throw new WxException(e);
+		}
 	}
 
 }
