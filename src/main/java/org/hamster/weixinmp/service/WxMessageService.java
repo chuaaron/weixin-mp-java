@@ -7,8 +7,8 @@ import static org.hamster.weixinmp.util.WxUtil.getAccessTokenParams;
 import static org.hamster.weixinmp.util.WxUtil.sendRequest;
 import static org.hamster.weixinmp.util.WxUtil.toJsonStringEntity;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
@@ -46,6 +47,8 @@ import org.hamster.weixinmp.service.handler.WxMessageHandlerIfc;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
+
+import com.google.gson.Gson;
 
 /**
  * @author grossopaforever@gmail.com
@@ -167,7 +170,7 @@ public class WxMessageService {
 		return result;
 	}
 	
-	public InputStream downloadMedia(String accessToken, String mediaId) throws WxException {
+	public byte[] downloadMedia(String accessToken, String mediaId, boolean skipCheck) throws WxException {
 		HttpClient client = HttpClientBuilder.create().build();
 		HttpRequestBase request = new HttpGet();
 		
@@ -179,7 +182,17 @@ public class WxMessageService {
 			
 			HttpResponse response = client.execute(request);
 			
-			return response.getEntity().getContent();
+			byte[] byteArrContent = IOUtils.toByteArray(response.getEntity().getContent());
+			if(!skipCheck) {
+				String respBody = IOUtils.toString(new ByteArrayInputStream(byteArrContent), "UTF-8");
+				Gson gson = new Gson();
+				if (respBody.indexOf("{\"errcode\"") == 0 || respBody.indexOf("{\"errmsg\"") == 0) {
+					WxRespCode exJson = gson.fromJson(respBody,WxRespCode.class);
+					throw new WxException(exJson);
+				}
+			}
+			
+			return byteArrContent;
 		} catch (IOException e) {
 			throw new WxException(e);
 		} catch (URISyntaxException e) {
