@@ -26,6 +26,7 @@ import org.hamster.weixinmp.model.WxRespCode;
 import org.springframework.http.HttpMethod;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 /**
  * @author grossopaforever@gmail.com
@@ -105,7 +106,7 @@ public class WxUtil {
 	}
 
 	public static StringEntity toJsonStringEntity(Object obj) {
-		Gson gson = new Gson();
+		Gson gson = new GsonBuilder().disableHtmlEscaping().create();//new Gson();
 		return new StringEntity(gson.toJson(obj), Consts.UTF_8);
 	}
 
