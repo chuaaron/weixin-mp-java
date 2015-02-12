@@ -242,6 +242,17 @@ public class WxXmlUtil {
 		if (ele.elementText("Ticket") != null) {
 			result.setEventKey(strVal(ele, "Ticket"));
 		}
+
+		if (ele.elementText("Latitude") != null) {
+			result.setLatitude(doubleVal(ele, "Latitude"));
+		}
+		if (ele.elementText("Longitude") != null) {
+			result.setLongitude(doubleVal(ele, "Longitude"));
+		}
+		if (ele.elementText("Precision") != null) {
+			result.setPrecision(doubleVal(ele, "Precision"));
+		}
+
 		return result;
 	}
 	
