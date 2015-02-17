@@ -176,6 +176,18 @@ public class WxMessageService {
 		return toJsonString(requestJson);
 	}
 	
+	public String buildJsonImageMessage(String toUser, String fromUser, String mediaId) {
+		Map<String, Object> requestJson = new HashMap<String, Object>();
+		requestJson.put("touser", toUser);
+		requestJson.put("fromuser", fromUser);
+		requestJson.put("msgtype", "image");
+		Map<String, Object> imageJson = new HashMap<String, Object>();
+		imageJson.put("media_id", mediaId);
+		requestJson.put("image", imageJson);
+		
+		return toJsonString(requestJson);
+	}
+	
 	public WxRespCode sendMessage(String accessToken, String toUserName, String content) throws WxException {
 		WxRespCode result = sendRequest(config.getCustomSendUrl(),
 										HttpMethod.POST,
@@ -207,6 +219,45 @@ public class WxMessageService {
 			}
 			
 			return byteArrContent;
+		} catch (IOException e) {
+			throw new WxException(e);
+		} catch (URISyntaxException e) {
+			throw new WxException(e);
+		}
+	}
+	
+	public String uploadMedia(String accessToken, byte[] mediaContent) throws WxException {
+		HttpClient client = HttpClientBuilder.create().build();
+		HttpPost httpPost = new HttpPost();
+		
+		try {
+			String mediaId = null;
+			URIBuilder builder = new URIBuilder("http://file.api.weixin.qq.com/cgi-bin/media/upload");
+			builder.addParameter("access_token", accessToken);
+			builder.addParameter("type", "image");
+			httpPost.setURI(builder.build());
+			httpPost.addHeader("Content-type", "multipart/form-data");
+			
+			MultipartEntityBuilder mpBuilder = MultipartEntityBuilder.create();
+			mpBuilder.addBinaryBody("media", mediaContent, ContentType.create("image/jpeg"),"agentupload.jpg");
+			
+			httpPost.setEntity(mpBuilder.build());
+			
+			HttpResponse response = client.execute(httpPost);
+			
+			String respBody = IOUtils.toString(response.getEntity().getContent(), "UTF-8");
+			Gson gson = new Gson();
+			if (respBody.indexOf("{\"errcode\"") == 0 || respBody.indexOf("{\"errmsg\"") == 0) {
+				WxRespCode exJson = gson.fromJson(respBody,WxRespCode.class);
+				throw new WxException(exJson);
+			} else {
+				Map<String,Object> respMap;
+				Type typeOfT = new TypeToken<Map<String,Object>>(){}.getType();
+				respMap = gson.fromJson(respBody, typeOfT);
+				mediaId = (String)respMap.get("media_id");
+			}
+			
+			return mediaId;
 		} catch (IOException e) {
 			throw new WxException(e);
 		} catch (URISyntaxException e) {
