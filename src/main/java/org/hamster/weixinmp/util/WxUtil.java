@@ -9,7 +9,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.http.Consts;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -17,7 +16,6 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.client.utils.URIBuilder;
-import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
 import org.hamster.weixinmp.dao.entity.base.WxBaseEntity;
@@ -105,9 +103,9 @@ public class WxUtil {
 		}
 	}
 
-	public static StringEntity toJsonStringEntity(Object obj) {
+	public static String toJsonString(Object obj) {
 		Gson gson = new GsonBuilder().disableHtmlEscaping().create();//new Gson();
-		return new StringEntity(gson.toJson(obj), Consts.UTF_8);
+		return gson.toJson(obj);
 	}
 
 	public static Map<String, String> getAccessTokenParams(String accessToken) {

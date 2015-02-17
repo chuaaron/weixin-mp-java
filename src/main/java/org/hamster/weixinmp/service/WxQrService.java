@@ -5,10 +5,12 @@ package org.hamster.weixinmp.service;
 
 import static org.hamster.weixinmp.util.WxUtil.getAccessTokenParams;
 import static org.hamster.weixinmp.util.WxUtil.sendRequest;
-import static org.hamster.weixinmp.util.WxUtil.toJsonStringEntity;
+import static org.hamster.weixinmp.util.WxUtil.toJsonString;
 
 import java.util.Map;
 
+import org.apache.http.Consts;
+import org.apache.http.entity.StringEntity;
 import org.hamster.weixinmp.config.WxConfig;
 import org.hamster.weixinmp.dao.entity.qr.WxQrEntity;
 import org.hamster.weixinmp.exception.WxException;
@@ -46,7 +48,7 @@ public class WxQrService {
 		}
 
 		WxQrEntity result = sendRequest(config.getQrcodeCreateUrl(),
-				HttpMethod.POST, params, toJsonStringEntity(requestJson),
+				HttpMethod.POST, params, new StringEntity(toJsonString(requestJson), Consts.UTF_8),
 				WxQrEntity.class);
 		result.setScene(sceneId);
 		return result;

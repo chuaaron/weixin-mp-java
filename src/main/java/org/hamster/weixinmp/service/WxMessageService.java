@@ -5,10 +5,11 @@ package org.hamster.weixinmp.service;
 
 import static org.hamster.weixinmp.util.WxUtil.getAccessTokenParams;
 import static org.hamster.weixinmp.util.WxUtil.sendRequest;
-import static org.hamster.weixinmp.util.WxUtil.toJsonStringEntity;
+import static org.hamster.weixinmp.util.WxUtil.toJsonString;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -19,9 +20,17 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.http.Consts;
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.entity.mime.MultipartEntity;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
+import org.apache.http.entity.mime.content.ByteArrayBody;
+import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.impl.client.HttpClientBuilder;
@@ -49,6 +58,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 /**
  * @author grossopaforever@gmail.com
@@ -153,24 +163,30 @@ public class WxMessageService {
 		result.setToUserName(toUserName);
 		return result;
 	}
-
-	public WxRespCode sendMessage(String accessToken, String toUserName,
-			String content) throws WxException {
+	
+	public String buildJsonTextMessage(String toUser, String fromUser, String content) {
 		Map<String, Object> requestJson = new HashMap<String, Object>();
-		requestJson.put("touser", toUserName);
+		requestJson.put("touser", toUser);
+		requestJson.put("fromuser", fromUser);
 		requestJson.put("msgtype", "text");
 		Map<String, Object> textJson = new HashMap<String, Object>();
 		textJson.put("content", content);
 		requestJson.put("text", textJson);
-
+		
+		return toJsonString(requestJson);
+	}
+	
+	public WxRespCode sendMessage(String accessToken, String toUserName, String content) throws WxException {
 		WxRespCode result = sendRequest(config.getCustomSendUrl(),
-				HttpMethod.POST, getAccessTokenParams(accessToken),
-				toJsonStringEntity(requestJson), WxRespCode.class);
-
+										HttpMethod.POST,
+										getAccessTokenParams(accessToken),
+										new StringEntity(content, Consts.UTF_8),
+										WxRespCode.class);
+		
 		return result;
 	}
 	
-	public byte[] downloadMedia(String accessToken, String mediaId, boolean skipCheck) throws WxException {
+	public byte[] downloadMedia(String accessToken, String mediaId) throws WxException {
 		HttpClient client = HttpClientBuilder.create().build();
 		HttpRequestBase request = new HttpGet();
 		
@@ -183,13 +199,11 @@ public class WxMessageService {
 			HttpResponse response = client.execute(request);
 			
 			byte[] byteArrContent = IOUtils.toByteArray(response.getEntity().getContent());
-			if(!skipCheck) {
-				String respBody = IOUtils.toString(new ByteArrayInputStream(byteArrContent), "UTF-8");
-				Gson gson = new Gson();
-				if (respBody.indexOf("{\"errcode\"") == 0 || respBody.indexOf("{\"errmsg\"") == 0) {
-					WxRespCode exJson = gson.fromJson(respBody,WxRespCode.class);
-					throw new WxException(exJson);
-				}
+			String respBody = IOUtils.toString(new ByteArrayInputStream(byteArrContent), "UTF-8");
+			Gson gson = new Gson();
+			if (respBody.indexOf("{\"errcode\"") == 0 || respBody.indexOf("{\"errmsg\"") == 0) {
+				WxRespCode exJson = gson.fromJson(respBody,WxRespCode.class);
+				throw new WxException(exJson);
 			}
 			
 			return byteArrContent;
@@ -199,7 +213,6 @@ public class WxMessageService {
 			throw new WxException(e);
 		}
 	}
-
 }
 
 class WxMessageHandlerComparator implements Comparator<WxMessageHandlerIfc> {

@@ -5,7 +5,7 @@ package org.hamster.weixinmp.service;
 
 import static org.hamster.weixinmp.util.WxUtil.getAccessTokenParams;
 import static org.hamster.weixinmp.util.WxUtil.sendRequest;
-import static org.hamster.weixinmp.util.WxUtil.toJsonStringEntity;
+import static org.hamster.weixinmp.util.WxUtil.toJsonString;
 
 import java.util.HashMap;
 import java.util.List;
@@ -15,6 +15,8 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
+import org.apache.http.Consts;
+import org.apache.http.entity.StringEntity;
 import org.hamster.weixinmp.config.WxConfig;
 import org.hamster.weixinmp.dao.entity.user.WxGroupEntity;
 import org.hamster.weixinmp.exception.WxException;
@@ -56,7 +58,7 @@ public class WxUserGroupService {
 
 		ResultMapper result = sendRequest(config.getGroupsCreateUrl(),
 				HttpMethod.POST, getAccessTokenParams(accessToken),
-				toJsonStringEntity(requestJson), ResultMapper.class);
+				new StringEntity(toJsonString(requestJson), Consts.UTF_8), ResultMapper.class);
 		return result.getGroup();
 	}
 
@@ -94,7 +96,7 @@ public class WxUserGroupService {
 		Map<String, Object> requestJson = new HashMap<String, Object>();
 		requestJson.put("openid", openId);
 		return sendRequest(config.getGroupsGetIdUrl(), HttpMethod.POST,
-				getAccessTokenParams(accessToken), toJsonStringEntity(requestJson),
+				getAccessTokenParams(accessToken), new StringEntity(toJsonString(requestJson), Consts.UTF_8),
 				ResultMapper.class).getGroupid();
 	}
 
@@ -119,7 +121,7 @@ public class WxUserGroupService {
 		l1Json.put("name", name);
 		requestJson.put("group", l1Json);
 		return sendRequest(config.getGroupsUpdateUrl(), HttpMethod.POST,
-				getAccessTokenParams(accessToken), toJsonStringEntity(requestJson),
+				getAccessTokenParams(accessToken), new StringEntity(toJsonString(requestJson), Consts.UTF_8),
 				WxRespCode.class);
 	}
 
@@ -142,7 +144,7 @@ public class WxUserGroupService {
 		requestJson.put("openid", openid);
 		requestJson.put("to_groupid", to_groupid);
 		return sendRequest(config.getGroupsMembersUpdateUrl(), HttpMethod.POST,
-				getAccessTokenParams(accessToken), toJsonStringEntity(requestJson),
+				getAccessTokenParams(accessToken), new StringEntity(toJsonString(requestJson), Consts.UTF_8),
 				WxRespCode.class);
 	}
 
