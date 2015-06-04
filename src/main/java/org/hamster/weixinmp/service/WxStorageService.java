@@ -39,12 +39,14 @@ import org.hamster.weixinmp.dao.repository.msg.WxMsgEventDao;
 import org.hamster.weixinmp.dao.repository.msg.WxMsgImageDao;
 import org.hamster.weixinmp.dao.repository.msg.WxMsgLinkDao;
 import org.hamster.weixinmp.dao.repository.msg.WxMsgLocDao;
+import org.hamster.weixinmp.dao.repository.msg.WxMsgShortVideoDao;
 import org.hamster.weixinmp.dao.repository.msg.WxMsgTextDao;
 import org.hamster.weixinmp.dao.repository.msg.WxMsgVideoDao;
 import org.hamster.weixinmp.dao.repository.msg.WxMsgVoiceDao;
 import org.hamster.weixinmp.dao.repository.resp.WxRespImageDao;
 import org.hamster.weixinmp.dao.repository.resp.WxRespMusicDao;
 import org.hamster.weixinmp.dao.repository.resp.WxRespPicDescDao;
+import org.hamster.weixinmp.dao.repository.resp.WxRespShortVideoDao;
 import org.hamster.weixinmp.dao.repository.resp.WxRespTextDao;
 import org.hamster.weixinmp.dao.repository.resp.WxRespVideoDao;
 import org.hamster.weixinmp.dao.repository.resp.WxRespVoiceDao;
@@ -83,6 +85,8 @@ public class WxStorageService {
 	@Autowired(required = false)
 	protected WxMsgVideoDao msgVideoDao;
 	@Autowired(required = false)
+	protected WxMsgShortVideoDao msgShortVideoDao;
+	@Autowired(required = false)
 	protected WxMsgVoiceDao msgVoiceDao;
 
 	@Autowired(required = false)
@@ -95,6 +99,8 @@ public class WxStorageService {
 	protected WxRespImageDao respImageDao;
 	@Autowired(required = false)
 	protected WxRespVideoDao respVideoDao;
+	@Autowired(required = false)
+	protected WxRespShortVideoDao respShortVideoDao;
 	@Autowired(required = false)
 	protected WxRespVoiceDao respVoiceDao;
 	

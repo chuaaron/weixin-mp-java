@@ -47,6 +47,7 @@ import org.hamster.weixinmp.dao.entity.base.WxBaseRespEntity;
 import org.hamster.weixinmp.dao.entity.resp.WxRespImageEntity;
 import org.hamster.weixinmp.dao.entity.resp.WxRespMusicEntity;
 import org.hamster.weixinmp.dao.entity.resp.WxRespPicDescEntity;
+import org.hamster.weixinmp.dao.entity.resp.WxRespShortVideoEntity;
 import org.hamster.weixinmp.dao.entity.resp.WxRespTextEntity;
 import org.hamster.weixinmp.dao.entity.resp.WxRespVideoEntity;
 import org.hamster.weixinmp.dao.entity.resp.WxRespVoiceEntity;
@@ -102,6 +103,8 @@ public class WxMessageService {
 			return WxXmlUtil.getMsgText(ele);
 		case VIDEO:
 			return WxXmlUtil.getMsgVideo(ele);
+		case SHORTVIDEO: 
+			return WxXmlUtil.getMsgShortVideo(ele);
 		case VOICE:
 			return WxXmlUtil.getMsgVoice(ele);
 		default:
@@ -144,6 +147,8 @@ public class WxMessageService {
 			return WxXmlUtil.getRespTextXML((WxRespTextEntity) resp);
 		case VIDEO:
 			return WxXmlUtil.getRespVideo((WxRespVideoEntity) resp);
+		case SHORTVIDEO:
+			return WxXmlUtil.getRespShortVideo((WxRespShortVideoEntity) resp);
 		case VOICE:
 			return WxXmlUtil.getRespVoice((WxRespVoiceEntity) resp);
 		default:
@@ -264,6 +269,7 @@ public class WxMessageService {
 			throw new WxException(e);
 		}
 	}
+	
 }
 
 class WxMessageHandlerComparator implements Comparator<WxMessageHandlerIfc> {
@@ -282,5 +288,5 @@ class WxMessageHandlerComparator implements Comparator<WxMessageHandlerIfc> {
 			return 0;
 		}
 	}
-
+	
 }

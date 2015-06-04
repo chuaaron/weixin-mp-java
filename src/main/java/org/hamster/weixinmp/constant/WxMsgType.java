@@ -15,6 +15,7 @@ public class WxMsgType {
 	public static final String LINK = "link";
 	public static final String EVENT = "event";
 	public static final String VIDEO = "video";
+	public static final String SHORTVIDEO = "shortvideo";	
 	public static final String VOICE = "voice";
 
 }

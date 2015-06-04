@@ -23,12 +23,14 @@ import org.hamster.weixinmp.dao.entity.msg.WxMsgEventEntity;
 import org.hamster.weixinmp.dao.entity.msg.WxMsgImageEntity;
 import org.hamster.weixinmp.dao.entity.msg.WxMsgLinkEntity;
 import org.hamster.weixinmp.dao.entity.msg.WxMsgLocEntity;
+import org.hamster.weixinmp.dao.entity.msg.WxMsgShortVideoEntity;
 import org.hamster.weixinmp.dao.entity.msg.WxMsgTextEntity;
 import org.hamster.weixinmp.dao.entity.msg.WxMsgVideoEntity;
 import org.hamster.weixinmp.dao.entity.msg.WxMsgVoiceEntity;
 import org.hamster.weixinmp.dao.entity.resp.WxRespImageEntity;
 import org.hamster.weixinmp.dao.entity.resp.WxRespMusicEntity;
 import org.hamster.weixinmp.dao.entity.resp.WxRespPicDescEntity;
+import org.hamster.weixinmp.dao.entity.resp.WxRespShortVideoEntity;
 import org.hamster.weixinmp.dao.entity.resp.WxRespTextEntity;
 import org.hamster.weixinmp.dao.entity.resp.WxRespVideoEntity;
 import org.hamster.weixinmp.dao.entity.resp.WxRespVoiceEntity;
@@ -153,6 +155,33 @@ public class WxXmlUtil {
 	 */
 	public static WxMsgVideoEntity getMsgVideo(Element ele) throws DocumentException {
 		WxMsgVideoEntity result = msgEntityFactory(WxMsgVideoEntity.class, ele);
+		WxItemVideoEntity video = new WxItemVideoEntity();
+		video.setMediaId(strVal(ele, "MediaId"));
+		WxItemThumbEntity thumb = new WxItemThumbEntity();
+		thumb.setMediaId(strVal(ele, "ThumbMediaId"));
+		video.setThumb(thumb);
+		result.setVideo(video);
+		return result;
+	}
+	
+	/**
+	 * <code>
+	 * &lt;xml&gt;<br />
+	 * &nbsp;&nbsp;&lt;ToUserName&gt;&lt;![CDATA[toUser]]&gt;&lt;/ToUserName&gt;<br />
+	 * &nbsp;&nbsp;&lt;FromUserName&gt;&lt;![CDATA[fromUser]]&gt;&lt;/FromUserName&gt;<br />
+	 * &nbsp;&nbsp;&lt;CreateTime&gt;1357290913&lt;/CreateTime&gt;<br />
+	 * &nbsp;&nbsp;&lt;MsgType&gt;&lt;![CDATA[video]]&gt;&lt;/MsgType&gt;<br />
+	 * &nbsp;&nbsp;&lt;MediaId&gt;&lt;![CDATA[media_id]]&gt;&lt;/MediaId&gt;<br />
+	 * &nbsp;&nbsp;&lt;ThumbMediaId&gt;&lt;![CDATA[thumb_media_id]]&gt;&lt;/ThumbMediaId&gt;<br />
+	 * &nbsp;&nbsp;&lt;MsgId&gt;1234567890123456&lt;/MsgId&gt;<br />
+	 * &lt;/xml&gt;
+	 * </code>
+	 * @param ele
+	 * @return
+	 * @throws DocumentException
+	 */
+	public static WxMsgShortVideoEntity getMsgShortVideo(Element ele) throws DocumentException {
+		WxMsgShortVideoEntity result = msgEntityFactory(WxMsgShortVideoEntity.class, ele);
 		WxItemVideoEntity video = new WxItemVideoEntity();
 		video.setMediaId(strVal(ele, "MediaId"));
 		WxItemThumbEntity thumb = new WxItemThumbEntity();
@@ -351,6 +380,33 @@ public class WxXmlUtil {
 		videoEle.addElement("MediaId").addCDATA(respVideo.getVideo().getMediaId());
 		videoEle.addElement("Title").addCDATA(StringUtils.defaultString(respVideo.getVideo().getTitle()));
 		videoEle.addElement("Description").addCDATA(StringUtils.defaultString(respVideo.getVideo().getDescription()));
+		return ele;
+	}
+	/**
+	 * <code>
+	 * &lt;xml&gt;<br />
+	 * &nbsp;&nbsp;&lt;ToUserName&gt;&lt;![CDATA[toUser]]&gt;&lt;/ToUserName&gt;<br />
+	 * &nbsp;&nbsp;&lt;FromUserName&gt;&lt;![CDATA[fromUser]]&gt;&lt;/FromUserName&gt;<br />
+	 * &nbsp;&nbsp;&lt;CreateTime&gt;12345678&lt;/CreateTime&gt;<br />
+	 * &nbsp;&nbsp;&lt;MsgType&gt;&lt;![CDATA[shortvideo]]&gt;&lt;/MsgType&gt;<br />
+	 * &nbsp;&nbsp;&lt;ShortVideo&gt;<br />
+	 * &nbsp;&nbsp;&nbsp;&nbsp;&lt;MediaId&gt;&lt;![CDATA[media_id]]&gt;&lt;/MediaId&gt;<br />
+	 * &nbsp;&nbsp;&nbsp;&nbsp;&lt;Title&gt;&lt;![CDATA[title]]&gt;&lt;/Title&gt;<br />
+	 * &nbsp;&nbsp;&nbsp;&nbsp;&lt;Description&gt;&lt;![CDATA[description]]&gt;&lt;/Description&gt;<br />
+	 * &nbsp;&nbsp;&lt;/ShortVideo&gt;<br />
+	 * &lt;/xml&gt;<br />
+	 * </code>
+	 * 
+	 * @param respShortVideo
+	 * @return
+	 * @throws DocumentException
+	 */
+	public static Element getRespShortVideo(WxRespShortVideoEntity respShortVideo) throws DocumentException {
+		Element ele = respEntityFactory(respShortVideo);
+		Element videoEle = ele.addElement("Video");
+		videoEle.addElement("MediaId").addCDATA(respShortVideo.getVideo().getMediaId());
+		videoEle.addElement("Title").addCDATA(StringUtils.defaultString(respShortVideo.getVideo().getTitle()));
+		videoEle.addElement("Description").addCDATA(StringUtils.defaultString(respShortVideo.getVideo().getDescription()));
 		return ele;
 	}
 	
