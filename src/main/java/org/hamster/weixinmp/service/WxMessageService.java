@@ -51,6 +51,7 @@ import org.hamster.weixinmp.dao.entity.resp.WxRespShortVideoEntity;
 import org.hamster.weixinmp.dao.entity.resp.WxRespTextEntity;
 import org.hamster.weixinmp.dao.entity.resp.WxRespVideoEntity;
 import org.hamster.weixinmp.dao.entity.resp.WxRespVoiceEntity;
+import org.hamster.weixinmp.dao.entity.resp.WxRespInitEntity;
 import org.hamster.weixinmp.exception.WxException;
 import org.hamster.weixinmp.model.WxRespCode;
 import org.hamster.weixinmp.service.handler.WxMessageHandlerIfc;
@@ -107,6 +108,8 @@ public class WxMessageService {
 			return WxXmlUtil.getMsgShortVideo(ele);
 		case VOICE:
 			return WxXmlUtil.getMsgVoice(ele);
+		case INIT:
+			return WxXmlUtil.getMsgInit(ele);
 		default:
 			// never happens
 			break;
@@ -151,6 +154,8 @@ public class WxMessageService {
 			return WxXmlUtil.getRespShortVideo((WxRespShortVideoEntity) resp);
 		case VOICE:
 			return WxXmlUtil.getRespVoice((WxRespVoiceEntity) resp);
+		case INIT:
+			return WxXmlUtil.getRespInitXML((WxRespInitEntity) resp);
 		default:
 			break;
 		}
@@ -177,6 +182,19 @@ public class WxMessageService {
 		Map<String, Object> textJson = new HashMap<String, Object>();
 		textJson.put("content", content);
 		requestJson.put("text", textJson);
+		
+		return toJsonString(requestJson);
+	}
+	
+	public String buildJsonInitMessage(String toUser, String fromUser, String content, String lcGroupId) {
+		Map<String, Object> requestJson = new HashMap<String, Object>();
+		requestJson.put("touser", toUser);
+		requestJson.put("fromuser", fromUser);
+		requestJson.put("msgtype", "text");
+		Map<String, Object> initJson = new HashMap<String, Object>();
+		initJson.put("content", content);
+		initJson.put("lc_groupid", lcGroupId);
+		requestJson.put("text", initJson);
 		
 		return toJsonString(requestJson);
 	}

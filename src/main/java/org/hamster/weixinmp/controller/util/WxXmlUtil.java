@@ -25,6 +25,7 @@ import org.hamster.weixinmp.dao.entity.msg.WxMsgLinkEntity;
 import org.hamster.weixinmp.dao.entity.msg.WxMsgLocEntity;
 import org.hamster.weixinmp.dao.entity.msg.WxMsgShortVideoEntity;
 import org.hamster.weixinmp.dao.entity.msg.WxMsgTextEntity;
+import org.hamster.weixinmp.dao.entity.msg.WxMsgInitEntity;
 import org.hamster.weixinmp.dao.entity.msg.WxMsgVideoEntity;
 import org.hamster.weixinmp.dao.entity.msg.WxMsgVoiceEntity;
 import org.hamster.weixinmp.dao.entity.resp.WxRespImageEntity;
@@ -32,6 +33,7 @@ import org.hamster.weixinmp.dao.entity.resp.WxRespMusicEntity;
 import org.hamster.weixinmp.dao.entity.resp.WxRespPicDescEntity;
 import org.hamster.weixinmp.dao.entity.resp.WxRespShortVideoEntity;
 import org.hamster.weixinmp.dao.entity.resp.WxRespTextEntity;
+import org.hamster.weixinmp.dao.entity.resp.WxRespInitEntity;
 import org.hamster.weixinmp.dao.entity.resp.WxRespVideoEntity;
 import org.hamster.weixinmp.dao.entity.resp.WxRespVoiceEntity;
 import org.hamster.weixinmp.util.WxUtil;
@@ -78,6 +80,32 @@ public class WxXmlUtil {
 	public static WxMsgTextEntity getMsgText(Element ele) throws DocumentException {
 		WxMsgTextEntity result = msgEntityFactory(WxMsgTextEntity.class, ele);
 		result.setContent(strVal(ele, "Content"));
+		return result;
+	}
+
+	/**
+	 * <code>
+	 * &lt;xml&gt;<br />
+	 * &nbsp;&nbsp;&lt;ToUserName&gt;&lt;![CDATA[toUser]]&gt;&lt;/ToUserName&gt;<br />
+	 * &nbsp;&nbsp;&lt;FromUserName&gt;&lt;![CDATA[fromUser]]&gt;&lt;/
+	 * FromUserName&gt; <br />
+	 * &nbsp;&nbsp;&lt;CreateTime&gt;1348831860&lt;/CreateTime&gt;<br />
+	 * &nbsp;&nbsp;&lt;MsgType&gt;&lt;![CDATA[text]]&gt;&lt;/MsgType&gt;<br />
+	 * &nbsp;&nbsp;&lt;Content&gt;&lt;![CDATA[this is a
+	 * test]]&gt;&lt;/Content&gt;<br />
+	 * &nbsp;&nbsp;&lt;LcGroupIdt&gt;&lt;![CDATA[group_id]]&gt;&lt;/LcGroupId&gt;<br />
+	 * &nbsp;&nbsp;&lt;MsgId&gt;1234567890123456&lt;/MsgId&gt;<br />
+	 * &lt;/xml&gt;<br />
+	 * </code>
+	 * 
+	 * @param xmlstr
+	 * @return
+	 * @throws DocumentException
+	 */
+	public static WxMsgInitEntity getMsgInit(Element ele) throws DocumentException {
+		WxMsgInitEntity result = msgEntityFactory(WxMsgInitEntity.class, ele);
+		result.setContent(strVal(ele, "Content"));
+		result.setLcGroupId(strVal(ele,"LcGroupId"));
 		return result;
 	}
 	
@@ -304,6 +332,30 @@ public class WxXmlUtil {
 	public static Element getRespTextXML(WxRespTextEntity respText) throws DocumentException {
 		Element ele = respEntityFactory(respText);
 		ele.addElement("Content").addCDATA(respText.getContent());
+		return ele;
+	}
+
+	/**
+	 * <code>
+	 * &lt;xml&gt;<br />
+	 * &nbsp;&nbsp;&lt;ToUserName&gt;&lt;![CDATA[toUser]]&gt;&lt;/ToUserName&gt;<br />
+	 * &nbsp;&nbsp;&lt;FromUserName&gt;&lt;![CDATA[fromUser]]&gt;&lt;/FromUserName&gt;<br />
+	 * &nbsp;&nbsp;&lt;CreateTime&gt;12345678&lt;/CreateTime&gt;<br />
+	 * &nbsp;&nbsp;&lt;MsgType&gt;&lt;![CDATA[text]]&gt;&lt;/MsgType&gt;<br />
+	 * &nbsp;&nbsp;&lt;Content&gt;&lt;![CDATA[content]]&gt;&lt;/Content&gt;<br />
+	 * &nbsp;&nbsp;&lt;LcGroupIdt&gt;&lt;![CDATA[group_id]]&gt;&lt;/LcGroupId&gt;<br />
+	 * &nbsp;&nbsp;&lt;FuncFlag&gt;0&lt;/FuncFlag&gt;<br />
+	 * &lt;/xml&gt;
+	 * </code>
+	 * 
+	 * @param respText
+	 * @return
+	 * @throws DocumentException
+	 */
+	public static Element getRespInitXML(WxRespInitEntity respInit) throws DocumentException {
+		Element ele = respEntityFactory(respInit);
+		ele.addElement("Content").addCDATA(respInit.getContent());
+		ele.addElement("LcGroupId").addCDATA(respInit.getLcGroupId());
 		return ele;
 	}
 	

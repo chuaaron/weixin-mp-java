@@ -23,9 +23,11 @@ import org.hamster.weixinmp.dao.entity.msg.WxMsgImageEntity;
 import org.hamster.weixinmp.dao.entity.msg.WxMsgLinkEntity;
 import org.hamster.weixinmp.dao.entity.msg.WxMsgLocEntity;
 import org.hamster.weixinmp.dao.entity.msg.WxMsgTextEntity;
+import org.hamster.weixinmp.dao.entity.msg.WxMsgInitEntity;
 import org.hamster.weixinmp.dao.entity.resp.WxRespMusicEntity;
 import org.hamster.weixinmp.dao.entity.resp.WxRespPicDescEntity;
 import org.hamster.weixinmp.dao.entity.resp.WxRespTextEntity;
+import org.hamster.weixinmp.dao.entity.resp.WxRespInitEntity;
 import org.hamster.weixinmp.dao.repository.auth.WxAuthDao;
 import org.hamster.weixinmp.dao.repository.auth.WxAuthReqDao;
 import org.hamster.weixinmp.dao.repository.item.WxItemImageDao;
@@ -41,6 +43,7 @@ import org.hamster.weixinmp.dao.repository.msg.WxMsgLinkDao;
 import org.hamster.weixinmp.dao.repository.msg.WxMsgLocDao;
 import org.hamster.weixinmp.dao.repository.msg.WxMsgShortVideoDao;
 import org.hamster.weixinmp.dao.repository.msg.WxMsgTextDao;
+import org.hamster.weixinmp.dao.repository.msg.WxMsgInitDao;
 import org.hamster.weixinmp.dao.repository.msg.WxMsgVideoDao;
 import org.hamster.weixinmp.dao.repository.msg.WxMsgVoiceDao;
 import org.hamster.weixinmp.dao.repository.resp.WxRespImageDao;
@@ -48,6 +51,7 @@ import org.hamster.weixinmp.dao.repository.resp.WxRespMusicDao;
 import org.hamster.weixinmp.dao.repository.resp.WxRespPicDescDao;
 import org.hamster.weixinmp.dao.repository.resp.WxRespShortVideoDao;
 import org.hamster.weixinmp.dao.repository.resp.WxRespTextDao;
+import org.hamster.weixinmp.dao.repository.resp.WxRespInitDao;
 import org.hamster.weixinmp.dao.repository.resp.WxRespVideoDao;
 import org.hamster.weixinmp.dao.repository.resp.WxRespVoiceDao;
 import org.hamster.weixinmp.dao.repository.user.WxGroupDao;
@@ -75,6 +79,8 @@ public class WxStorageService {
 	@Autowired(required = false)
 	protected WxMsgTextDao msgTextDao;
 	@Autowired(required = false)
+	protected WxMsgInitDao msgInitDao;
+	@Autowired(required = false)
 	protected WxMsgImageDao msgImgDao;
 	@Autowired(required = false)
 	protected WxMsgLinkDao msgLinkDao;
@@ -91,6 +97,8 @@ public class WxStorageService {
 
 	@Autowired(required = false)
 	protected WxRespTextDao respTextDao;
+	@Autowired(required = false)
+	protected WxRespInitDao respInitDao;
 	@Autowired(required = false)
 	protected WxRespPicDescDao respPicDescDao;
 	@Autowired(required = false)
@@ -140,7 +148,17 @@ public class WxStorageService {
 		}
 		return msgText;
 	}
+	
+	public WxMsgInitEntity saveMsgInit(Element ele) throws DocumentException {
+		WxMsgInitEntity msgInit = WxXmlUtil.getMsgInit(ele);
+		if (msgInitDao != null) {
+			msgInitDao.save(msgInit);
+		} else {
 
+		}
+		return msgInit;
+	}
+	
 	public WxMsgImageEntity saveMsgImg(Element ele) throws DocumentException {
 		WxMsgImageEntity msgImg = WxXmlUtil.getMsgImage(ele);
 		if (msgImgDao != null) {
@@ -198,7 +216,26 @@ public class WxStorageService {
 		}
 		return respText;
 	}
+	
+	public WxRespInitEntity createRespInit(String content, String lcGroupId, String fromUserName,
+			String toUserName, Integer funcFlag) {
+		WxRespInitEntity respInit = new WxRespInitEntity();
+		respInit.setContent(content);
+		respInit.setLcGroupId(lcGroupId);
+		respInit.setCreatedDate(new Date());
+		respInit.setCreateTime(WxUtil.currentTimeInSec());
+		respInit.setFromUserName(fromUserName);
+		respInit.setToUserName(toUserName);
+		respInit.setFuncFlag(funcFlag);
+		respInit.setMsgType(WxMsgRespType.INIT);
+		if (respInitDao != null) {
+			respInitDao.save(respInit);
+		} else {
 
+		}
+		return respInit;
+	}
+	
 	public WxRespPicDescEntity createRespPicDesc(
 			List<WxItemPicDescEntity> articles, String fromUserName,
 			String toUserName, Integer funcFlag) {
