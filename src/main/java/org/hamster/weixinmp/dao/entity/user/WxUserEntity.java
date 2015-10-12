@@ -53,5 +53,7 @@ public class WxUserEntity extends WxBaseEntity {
 	@SerializedName("subscribe_time")
 	@Column(name = "subscribe_time", nullable = false)
 	private Long subscribeTime;
-
+	@SerializedName("unionid")
+	@Column(name = "union_id", length = WxConfig.COL_LEN_INDICATOR, nullable = false)
+	private String unionId;
 }
