@@ -211,6 +211,18 @@ public class WxMessageService {
 		return toJsonString(requestJson);
 	}
 	
+	public String buildJsonNewsMessage(String toUser, String fromUser, String mediaId) {
+		Map<String, Object> requestJson = new HashMap<String, Object>();
+		requestJson.put("touser", toUser);
+		requestJson.put("fromuser", fromUser);
+		requestJson.put("msgtype", "mpnews");
+		Map<String, Object> newsJson = new HashMap<String, Object>();
+		newsJson.put("media_id", mediaId);
+		requestJson.put("mpnews", newsJson);
+		
+		return toJsonString(requestJson);
+	}	
+	
 	public WxRespCode sendMessage(String accessToken, String toUserName, String content) throws WxException {
 		WxRespCode result = sendRequest(config.getCustomSendUrl(),
 										HttpMethod.POST,
