@@ -210,7 +210,29 @@ public class WxMessageService {
 		
 		return toJsonString(requestJson);
 	}
-	
+
+	public String buildJsonVoiceMessage(String toUser, String fromUser, String mediaId) {
+		Map<String, Object> requestJson = new HashMap<String, Object>();
+		requestJson.put("touser", toUser);
+		requestJson.put("fromuser", fromUser);
+		requestJson.put("msgtype", "voice");
+		Map<String, Object> voiceJson = new HashMap<String, Object>();
+		voiceJson.put("media_id", mediaId);
+		requestJson.put("voice", voiceJson);
+		
+		return toJsonString(requestJson);
+	}
+	public String buildJsonVideoMessage(String toUser, String fromUser, String mediaId, String description, String title, String thumbMediaId) {
+		Map<String, Object> requestJson = new HashMap<String, Object>();
+		requestJson.put("touser", toUser);
+		requestJson.put("fromuser", fromUser);
+		requestJson.put("msgtype", "video");
+		Map<String, Object> videoJson = new HashMap<String, Object>();
+		videoJson.put("media_id", mediaId);
+		requestJson.put("video", videoJson);
+		
+		return toJsonString(requestJson);
+	}
 	public String buildJsonNewsMessage(String toUser, String fromUser, String mediaId) {
 		Map<String, Object> requestJson = new HashMap<String, Object>();
 		requestJson.put("touser", toUser);
@@ -222,6 +244,24 @@ public class WxMessageService {
 		
 		return toJsonString(requestJson);
 	}	
+
+	public static String buildJsonArticleMessage(String toUser, String fromUser, String title, String description, String url, String picUrl) {
+		Map<String, Object> requestJson = new HashMap<String, Object>();
+		requestJson.put("touser", toUser);
+		requestJson.put("fromuser", fromUser);
+		requestJson.put("msgtype", "news");
+		Map<String, Object> articleHolderJson = new HashMap<String, Object>();
+		Map<String, Object> articleJson = new HashMap<String, Object>();
+		ArrayList<Map<String, Object>> articleArrayHolder = new ArrayList<Map<String, Object>>();
+		articleJson.put("title", title);
+		articleJson.put("description", description);
+		articleJson.put("url", url);
+		articleJson.put("picurl", picUrl);
+		articleArrayHolder.add(articleJson);
+		articleHolderJson.put("articles", articleArrayHolder);
+		requestJson.put("news", articleHolderJson);	
+		return toJsonString(requestJson);
+	}
 	
 	public WxRespCode sendMessage(String accessToken, String toUserName, String content) throws WxException {
 		WxRespCode result = sendRequest(config.getCustomSendUrl(),
@@ -261,7 +301,7 @@ public class WxMessageService {
 		}
 	}
 	
-	public String uploadMedia(String accessToken, byte[] mediaContent) throws WxException {
+	public String uploadMedia(String accessToken, byte[] mediaContent, String mediaType) throws WxException {
 		HttpClient client = HttpClientBuilder.create().build();
 		HttpPost httpPost = new HttpPost();
 		
@@ -269,12 +309,24 @@ public class WxMessageService {
 			String mediaId = null;
 			URIBuilder builder = new URIBuilder("http://file.api.weixin.qq.com/cgi-bin/media/upload");
 			builder.addParameter("access_token", accessToken);
-			builder.addParameter("type", "image");
+			builder.addParameter("type", mediaType);
 			httpPost.setURI(builder.build());
 			httpPost.addHeader("Content-type", "multipart/form-data");
 			
 			MultipartEntityBuilder mpBuilder = MultipartEntityBuilder.create();
-			mpBuilder.addBinaryBody("media", mediaContent, ContentType.create("image/jpeg"),"agentupload.jpg");
+			String mediaMimeType = "image/jpeg", fileExt = ".jpg";
+			
+			if (mediaType.equalsIgnoreCase("image")){
+				mediaMimeType = "image/jpeg";
+			    fileExt = ".jpg";
+			} else if (mediaType.equalsIgnoreCase("voice")){
+				mediaMimeType = "audio/mpeg";				
+			    fileExt = ".mp3";				
+			} else if (mediaType.equalsIgnoreCase("video")){
+				mediaMimeType = "video/mp4";
+				fileExt = ".mp4";
+			}
+			mpBuilder.addBinaryBody("media", mediaContent, ContentType.create(mediaMimeType),"agentupload" + fileExt);
 			
 			httpPost.setEntity(mpBuilder.build());
 			
@@ -298,6 +350,9 @@ public class WxMessageService {
 		} catch (URISyntaxException e) {
 			throw new WxException(e);
 		}
+	}
+	
+	public static void main(String[] args){
 	}
 	
 }

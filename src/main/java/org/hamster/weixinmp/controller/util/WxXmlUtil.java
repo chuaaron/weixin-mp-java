@@ -297,9 +297,8 @@ public class WxXmlUtil {
 			result.setEventKey(strVal(ele, "EventKey"));
 		}
 		if (ele.elementText("Ticket") != null) {
-			result.setEventKey(strVal(ele, "Ticket"));
+			result.setTicket(strVal(ele, "Ticket"));
 		}
-
 		if (ele.elementText("Latitude") != null) {
 			result.setLatitude(doubleVal(ele, "Latitude"));
 		}
