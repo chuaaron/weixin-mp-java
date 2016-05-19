@@ -47,7 +47,9 @@ public class WxConfig {
 	private @Value("#{wxProperties.wx_groups_getid_url}") String groupsGetIdUrl;
 	private @Value("#{wxProperties.wx_groups_update_url}") String groupsUpdateUrl;
 	private @Value("#{wxProperties.wx_groups_members_update_url}") String groupsMembersUpdateUrl;
-	
+	private @Value("#{wxProperties.wx_component_access_token_url}") String componentAccessTokenUrl;
+	private @Value("#{wxProperties.wx_component_preauth_code_url}") String componentPreauthCodeUrl;
+	private @Value("#{wxProperties.wx_component_query_auth_url}") String componentQueryAuthUrl;	
 	
 	
 }

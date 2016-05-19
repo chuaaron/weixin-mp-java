@@ -37,6 +37,8 @@ import org.hamster.weixinmp.dao.entity.resp.WxRespInitEntity;
 import org.hamster.weixinmp.dao.entity.resp.WxRespVideoEntity;
 import org.hamster.weixinmp.dao.entity.resp.WxRespVoiceEntity;
 import org.hamster.weixinmp.util.WxUtil;
+import org.hamster.weixinmp.dao.entity.msg.WxMsgEncryptEntity;
+import org.hamster.weixinmp.dao.entity.resp.WxRespEncryptEntity;
 
 
 /**
@@ -78,6 +80,7 @@ public class WxXmlUtil {
 	 * @throws DocumentException
 	 */
 	public static WxMsgTextEntity getMsgText(Element ele) throws DocumentException {
+		System.out.println(">>>>>>>>ele:" + ele);
 		WxMsgTextEntity result = msgEntityFactory(WxMsgTextEntity.class, ele);
 		result.setContent(strVal(ele, "Content"));
 		return result;
@@ -311,6 +314,36 @@ public class WxXmlUtil {
 
 		return result;
 	}
+	
+	//encrypt methods
+	@SuppressWarnings("unchecked")
+
+	
+	public static WxMsgEncryptEntity getMsgEncrypt(Element ele) throws DocumentException {
+			//WxMsgEncryptEntity result = msgEntityFactory(WxMsgEncryptEntity.class, ele);
+			System.out.println(">>>>>>>>ele:" + ele);
+			WxMsgEncryptEntity result = msgEntityFactorySafe(WxMsgEncryptEntity.class, ele);
+			if (ele.element("AppId") != null && !"".equals(ele.element("AppId").getStringValue())){
+				System.out.println("appid:" + ele.element("AppId").getStringValue());
+				result.setAppid(strVal(ele, "AppId"));
+			}
+			if (ele.element("Encrypt") != null && !"".equals(ele.element("Encrypt").getStringValue())){
+				System.out.println("Encrypt:" + ele.element("Encrypt").getStringValue());				
+				result.setEncrypt(strVal(ele,"Encrypt"));
+			}
+			System.out.println("what am I?" + result.getClass().getCanonicalName());
+			System.out.println("am i an encrypt?" + (result instanceof WxMsgEncryptEntity));
+			return result;
+	}	
+	
+	public static Element getRespEncryptXML(WxRespEncryptEntity respEncrypt) throws DocumentException {
+			Element ele = respEntityFactory(respEncrypt);
+			if (respEncrypt.getAppid() != null && !"".equals(respEncrypt.getAppid()))
+				ele.addElement("AppId").addCDATA(respEncrypt.getAppid());
+			if (respEncrypt.getEncrypt() != null && !"".equals(respEncrypt.getEncrypt()))			
+				ele.addElement("Encrypt").addCDATA(respEncrypt.getEncrypt());
+			return ele;
+	}		
 	
 	/**
 	 * <code>
@@ -574,6 +607,39 @@ public class WxXmlUtil {
 		}
 	}
 	
+	private static <T> T msgEntityFactorySafe(
+			Class<? extends WxBaseMsgEntity> clazz, Element ele) {
+		WxBaseMsgEntity result;
+		try {
+			result = clazz.newInstance();
+			if (ele.element("ToUserName") != null && !"".equals(ele.element("ToUserName").getStringValue()))
+				result.setToUserName(strVal(ele, "ToUserName"));
+			if (ele.element("FromUserName") != null && !"".equals(ele.element("FromUserName").getStringValue()))			
+				result.setFromUserName(strVal(ele, "FromUserName"));
+			if (ele.element("CreateTime") != null && !"".equals(ele.element("CreateTime").getStringValue()))						
+				result.setCreateTime(longVal(ele, "CreateTime"));
+			if (ele.element("MsgType") != null && !"".equals(ele.element("MsgType").getStringValue()))	
+				result.setMsgType(strVal(ele, "MsgType"));
+			if (ele.element("MsgId") != null && !"".equals(ele.element("MsgId").getStringValue())) {
+				result.setMsgId(longVal(ele, "MsgId"));
+			}
+			result.setCreatedDate(new Date());
+			return (T) result;
+		} catch (Exception e) {
+			// never occurs
+			e.printStackTrace();
+			return null;
+		}
+	}	
+	
+//	private static WxMsgEncryptEntity msgEncryptEntityFactory(Element ele){
+//		try {
+//			
+//		} catch (Exception e){
+//			e.printStackTrace();
+//			return null;
+//		}
+//	}
 	private static Element respEntityFactory(WxBaseRespEntity entity) {
 		Element ele = DocumentHelper.createElement("xml");
 		ele.addElement("ToUserName").addCDATA(entity.getToUserName());

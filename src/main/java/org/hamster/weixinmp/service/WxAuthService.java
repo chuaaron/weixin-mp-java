@@ -23,6 +23,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 
+import org.apache.http.Consts;
+import org.apache.http.entity.StringEntity;
+import static org.hamster.weixinmp.util.WxUtil.getAccessTokenParams;
+import static org.hamster.weixinmp.util.WxUtil.sendRequest;
+import static org.hamster.weixinmp.util.WxUtil.toJsonString;
+
+import org.hamster.weixinmp.dao.entity.auth.WxComponentAuth;
+import org.hamster.weixinmp.dao.entity.auth.WxComponentPreauthCode;
+import org.hamster.weixinmp.model.WxRespCode;
+
 /**
  * @author grossopaforever@gmail.com
  * @version Jan 1, 2014
@@ -50,6 +60,57 @@ public class WxAuthService {
 		result.setSecret(appsecret);
 		return result;
 	}
+
+	public WxComponentAuth getComponentAccessToken(String appid, String appsecret, String ticket)
+			throws WxException {
+		Map<String, String> requestJson = new HashMap<String, String>();
+		requestJson.put("component_appid", appid);
+		requestJson.put("component_appsecret", appsecret);
+		requestJson.put("component_verify_ticket", ticket);
+		return WxUtil.sendRequest(config.getComponentAccessTokenUrl(),
+				HttpMethod.POST,
+				null,
+				new StringEntity(toJsonString(requestJson), Consts.UTF_8),
+				WxComponentAuth.class);
+	}
+	
+	public String getComponentAccessTokenValue(String appid, String appsecret, String ticket)
+			throws WxException {
+		Map<String, String> requestJson = new HashMap<String, String>();
+		requestJson.put("component_appid", appid);
+		requestJson.put("component_appsecret", appsecret);
+		requestJson.put("component_verify_ticket", ticket);
+		return WxUtil.sendRequest(config.getComponentAccessTokenUrl(),
+				HttpMethod.POST,
+				null,
+				new StringEntity(toJsonString(requestJson), Consts.UTF_8),
+				WxComponentAuth.class).getComponentAccessToken();
+	}
+	
+	public WxComponentPreauthCode getComponentPreauthCode(String appid, String appsecret, String ticket)
+			throws WxException {
+		Map<String, String> requestJson = new HashMap<String, String>();
+		requestJson.put("component_appid", appid);
+		requestJson.put("component_appsecret", appsecret);
+		requestJson.put("component_verify_ticket", ticket);
+		return WxUtil.sendRequest(config.getComponentAccessTokenUrl(),
+				HttpMethod.POST,
+				null,
+				new StringEntity(toJsonString(requestJson), Consts.UTF_8),
+				WxComponentPreauthCode.class);
+	}
+		
+	public String getComponentPreauthCodeValue(String appid, String accessToken)
+			throws WxException {
+		Map<String, String> requestJson = new HashMap<String, String>();
+		requestJson.put("component_appid", appid);
+		return WxUtil.sendRequest(config.getComponentPreauthCodeUrl(),
+				HttpMethod.POST,
+				getAccessTokenParams(accessToken),
+				new StringEntity(toJsonString(requestJson), Consts.UTF_8),
+				WxComponentPreauthCode.class).getPreAuthCode();
+	}
+	 
 
 	public boolean validateAuth(String signature, String timestamp,
 			String nonce, String echostr) throws WxException {

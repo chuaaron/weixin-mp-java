@@ -52,6 +52,7 @@ import org.hamster.weixinmp.dao.entity.resp.WxRespTextEntity;
 import org.hamster.weixinmp.dao.entity.resp.WxRespVideoEntity;
 import org.hamster.weixinmp.dao.entity.resp.WxRespVoiceEntity;
 import org.hamster.weixinmp.dao.entity.resp.WxRespInitEntity;
+import org.hamster.weixinmp.dao.entity.resp.WxRespEncryptEntity;
 import org.hamster.weixinmp.exception.WxException;
 import org.hamster.weixinmp.model.WxRespCode;
 import org.hamster.weixinmp.service.handler.WxMessageHandlerIfc;
@@ -83,7 +84,12 @@ public class WxMessageService {
 		Element ele = DocumentHelper.parseText(xml).getRootElement();
 		String msgType = null;
 		if ((msgType = ele.elementText("MsgType")) == null) {
-			throw new WxException("cannot find MsgType Node!\n" + xml);
+			if (ele.elementText("Encrypt") != null) {
+				msgType = "encrypt";
+				System.out.println(">>>>>>>firstele:" + ele);
+			}
+			else 
+				throw new WxException("cannot find MsgType Node!\n" + xml);
 		}
 		WxMsgTypeEnum msgTypeEnum = WxMsgTypeEnum.inst(msgType);
 		switch (msgTypeEnum) {
@@ -110,6 +116,8 @@ public class WxMessageService {
 			return WxXmlUtil.getMsgVoice(ele);
 		case INIT:
 			return WxXmlUtil.getMsgInit(ele);
+		case ENCRYPT:
+			return WxXmlUtil.getMsgEncrypt(ele);			
 		default:
 			// never happens
 			break;
@@ -156,6 +164,8 @@ public class WxMessageService {
 			return WxXmlUtil.getRespVoice((WxRespVoiceEntity) resp);
 		case INIT:
 			return WxXmlUtil.getRespInitXML((WxRespInitEntity) resp);
+		case ENCRYPT:
+			return WxXmlUtil.getRespEncryptXML((WxRespEncryptEntity) resp);			
 		default:
 			break;
 		}

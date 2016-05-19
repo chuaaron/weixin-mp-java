@@ -9,7 +9,7 @@ public enum WxMsgTypeEnum {
 	
 	
 	TEXT(WxMsgType.TEXT), IMAGE(WxMsgType.IMAGE), LOCATION(WxMsgType.LOCATION), 
-	LINK(WxMsgType.LINK), EVENT(WxMsgType.EVENT), VIDEO(WxMsgType.VIDEO),SHORTVIDEO(WxMsgType.SHORTVIDEO), VOICE(WxMsgType.VOICE), INIT(WxMsgType.INIT);
+	LINK(WxMsgType.LINK), EVENT(WxMsgType.EVENT), VIDEO(WxMsgType.VIDEO),SHORTVIDEO(WxMsgType.SHORTVIDEO), VOICE(WxMsgType.VOICE), INIT(WxMsgType.INIT), ENCRYPT(WxMsgType.ENCRYPT);;
 	/**
 	 * @param text
 	 */
