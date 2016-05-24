@@ -50,6 +50,5 @@ public class WxConfig {
 	private @Value("#{wxProperties.wx_component_access_token_url}") String componentAccessTokenUrl;
 	private @Value("#{wxProperties.wx_component_preauth_code_url}") String componentPreauthCodeUrl;
 	private @Value("#{wxProperties.wx_component_query_auth_url}") String componentQueryAuthUrl;	
-	
-	
+	private @Value("#{wxProperties.wx_component_refresh_token_url}") String componentRefreshTokenUrl;
 }

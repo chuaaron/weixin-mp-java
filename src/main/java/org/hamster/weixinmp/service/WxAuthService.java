@@ -14,7 +14,9 @@ import java.util.Map;
 
 import org.hamster.weixinmp.config.WxConfig;
 import org.hamster.weixinmp.dao.entity.auth.WxAuth;
+import org.hamster.weixinmp.dao.entity.auth.WxAuthRefresh;
 import org.hamster.weixinmp.dao.entity.auth.WxAuthReq;
+import org.hamster.weixinmp.dao.entity.auth.WxAuthorizerAuth;
 import org.hamster.weixinmp.exception.WxException;
 import org.hamster.weixinmp.util.WxUtil;
 import org.slf4j.Logger;
@@ -22,9 +24,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
-
 import org.apache.http.Consts;
 import org.apache.http.entity.StringEntity;
+
 import static org.hamster.weixinmp.util.WxUtil.getAccessTokenParams;
 import static org.hamster.weixinmp.util.WxUtil.sendRequest;
 import static org.hamster.weixinmp.util.WxUtil.toJsonString;
@@ -61,6 +63,56 @@ public class WxAuthService {
 		return result;
 	}
 
+	public WxAuthorizerAuth getAuthorizerAccessToken(String appid, String authorizationCode, String componentAccessToken)
+			throws WxException {
+		Map<String, String> requestJson = new HashMap<String, String>();
+		requestJson.put("component_appid", appid);
+		requestJson.put("authorization_code", authorizationCode);
+		return WxUtil.sendRequest(config.getComponentQueryAuthUrl(),
+				HttpMethod.POST,
+				getAccessTokenParams(componentAccessToken),
+				new StringEntity(toJsonString(requestJson), Consts.UTF_8),
+				WxAuthorizerAuth.class);
+	}
+	
+	public String getAuthorizerAccessTokenValue(String appid, String authorizationCode, String componentAccessToken)
+			throws WxException {
+		Map<String, String> requestJson = new HashMap<String, String>();
+		requestJson.put("component_appid", appid);
+		requestJson.put("authorization_code", authorizationCode);
+		System.out.println(requestJson);
+
+		System.out.println("config:" + config.getComponentQueryAuthUrl());
+		WxAuthorizerAuth wxAuth =  WxUtil.sendRequest(config.getComponentQueryAuthUrl(),
+				HttpMethod.POST,
+				getAccessTokenParams(componentAccessToken),
+				new StringEntity(toJsonString(requestJson), Consts.UTF_8),
+				WxAuthorizerAuth.class);
+		String authAccToken = ""; 
+		if (wxAuth != null &&  wxAuth.getAuthorizationInfo() != null)
+			authAccToken = wxAuth.getAuthorizationInfo().getAuthorizerAccessToken();
+		return authAccToken;
+	}
+	
+
+	
+	public WxAuthRefresh getRefreshAccessToken(String appid, String authorizerAppId, String authorizerRefreshToken, String componentAccessToken)
+			throws WxException {
+		Map<String, String> requestJson = new HashMap<String, String>();
+		requestJson.put("component_appid", appid);
+		requestJson.put("authorizer_appid", authorizerAppId);
+		requestJson.put("authorizer_refresh_token", authorizerRefreshToken);
+	
+		System.out.println(requestJson);
+
+		WxAuthRefresh wxAuth =  WxUtil.sendRequest(config.getComponentRefreshTokenUrl(),
+				HttpMethod.POST,
+				getAccessTokenParams(componentAccessToken),
+				new StringEntity(toJsonString(requestJson), Consts.UTF_8),
+				WxAuthRefresh.class);
+		//String authAccToken = ""; 
+		return wxAuth;
+	}	
 	public WxComponentAuth getComponentAccessToken(String appid, String appsecret, String ticket)
 			throws WxException {
 		Map<String, String> requestJson = new HashMap<String, String>();

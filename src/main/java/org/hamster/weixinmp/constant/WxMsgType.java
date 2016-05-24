@@ -19,4 +19,7 @@ public class WxMsgType {
 	public static final String VOICE = "voice";
 	public static final String INIT = "init";
 	public static final String ENCRYPT = "encrypt";
+	public static final String COMPONENTVERIFYTICKET = "component_verify_ticket";
+	public static final String AUTHORIZED = "authorized";		
+	public static final String UNAUTHORIZED = "unauthorized";			
 }

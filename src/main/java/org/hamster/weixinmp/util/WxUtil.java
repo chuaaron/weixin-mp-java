@@ -4,7 +4,9 @@
 package org.hamster.weixinmp.util;
 
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.net.URISyntaxException;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -25,6 +27,7 @@ import org.springframework.http.HttpMethod;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 
 /**
  * @author grossopaforever@gmail.com
@@ -89,6 +92,9 @@ public class WxUtil {
 						throw new WxException(exJson);
 					}
 				}
+				System.out.println("respbody:" + respBody);
+//				Type collectionType = new TypeToken<Collection<T>>(){}.getType();
+//				Collection<T> enums = gson.fromJson(respBody, collectionType);
 				T result = gson.fromJson(respBody, resultClass);
 				if (result instanceof WxBaseEntity) {
 					((WxBaseEntity) result).setCreatedDate(new Date());

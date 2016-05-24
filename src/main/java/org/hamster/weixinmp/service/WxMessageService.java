@@ -42,6 +42,7 @@ import org.hamster.weixinmp.constant.WxMsgRespType;
 import org.hamster.weixinmp.constant.WxMsgRespTypeEnum;
 import org.hamster.weixinmp.constant.WxMsgTypeEnum;
 import org.hamster.weixinmp.controller.util.WxXmlUtil;
+import org.hamster.weixinmp.dao.entity.base.WxBaseEntity;
 import org.hamster.weixinmp.dao.entity.base.WxBaseMsgEntity;
 import org.hamster.weixinmp.dao.entity.base.WxBaseRespEntity;
 import org.hamster.weixinmp.dao.entity.resp.WxRespImageEntity;
@@ -79,18 +80,19 @@ public class WxMessageService {
 	@Autowired(required = false)
 	private WxStorageService wxStorageService;
 
-	public WxBaseMsgEntity parseXML(String xml) throws DocumentException,
+	public WxBaseEntity parseXML(String xml) throws DocumentException,
 			WxException {
 		Element ele = DocumentHelper.parseText(xml).getRootElement();
 		String msgType = null;
-		if ((msgType = ele.elementText("MsgType")) == null) {
+		msgType = ele.elementText("MsgType");
+		if (msgType == null) {
 			if (ele.elementText("Encrypt") != null) {
 				msgType = "encrypt";
-				System.out.println(">>>>>>>firstele:" + ele);
-			}
-			else 
+			} else if (ele.elementText("InfoType") != null){
+				msgType = ele.elementText("InfoType");
+			} else
 				throw new WxException("cannot find MsgType Node!\n" + xml);
-		}
+		} 
 		WxMsgTypeEnum msgTypeEnum = WxMsgTypeEnum.inst(msgType);
 		switch (msgTypeEnum) {
 		case EVENT:
@@ -117,7 +119,13 @@ public class WxMessageService {
 		case INIT:
 			return WxXmlUtil.getMsgInit(ele);
 		case ENCRYPT:
-			return WxXmlUtil.getMsgEncrypt(ele);			
+			return WxXmlUtil.getMsgEncrypt(ele);	
+		case COMPONENTVERIFYTICKET:
+			return WxXmlUtil.getMsgComponentVerifyTicket(ele);
+		case AUTHORIZED:
+			return WxXmlUtil.getMsgAuthorized(ele);			
+		case UNAUTHORIZED:
+			return WxXmlUtil.getMsgUnauthorized(ele);					
 		default:
 			// never happens
 			break;

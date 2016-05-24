@@ -13,12 +13,15 @@ import org.dom4j.Element;
 import org.hamster.weixinmp.constant.WxMsgTypeEnum;
 import org.hamster.weixinmp.dao.entity.auth.WxAuthReq;
 import org.hamster.weixinmp.dao.entity.base.WxBaseMsgEntity;
+import org.hamster.weixinmp.dao.entity.base.WxBaseMsgInfoEntity;
 import org.hamster.weixinmp.dao.entity.base.WxBaseRespEntity;
 import org.hamster.weixinmp.dao.entity.item.WxItemImageEntity;
 import org.hamster.weixinmp.dao.entity.item.WxItemPicDescEntity;
 import org.hamster.weixinmp.dao.entity.item.WxItemThumbEntity;
 import org.hamster.weixinmp.dao.entity.item.WxItemVideoEntity;
 import org.hamster.weixinmp.dao.entity.item.WxItemVoiceEntity;
+import org.hamster.weixinmp.dao.entity.msg.WxMsgAuthorizedEntity;
+import org.hamster.weixinmp.dao.entity.msg.WxMsgComponentVerifyTicketEntity;
 import org.hamster.weixinmp.dao.entity.msg.WxMsgEventEntity;
 import org.hamster.weixinmp.dao.entity.msg.WxMsgImageEntity;
 import org.hamster.weixinmp.dao.entity.msg.WxMsgLinkEntity;
@@ -26,6 +29,7 @@ import org.hamster.weixinmp.dao.entity.msg.WxMsgLocEntity;
 import org.hamster.weixinmp.dao.entity.msg.WxMsgShortVideoEntity;
 import org.hamster.weixinmp.dao.entity.msg.WxMsgTextEntity;
 import org.hamster.weixinmp.dao.entity.msg.WxMsgInitEntity;
+import org.hamster.weixinmp.dao.entity.msg.WxMsgUnauthorizedEntity;
 import org.hamster.weixinmp.dao.entity.msg.WxMsgVideoEntity;
 import org.hamster.weixinmp.dao.entity.msg.WxMsgVoiceEntity;
 import org.hamster.weixinmp.dao.entity.resp.WxRespImageEntity;
@@ -345,6 +349,49 @@ public class WxXmlUtil {
 			return ele;
 	}		
 	
+	public static WxMsgComponentVerifyTicketEntity getMsgComponentVerifyTicket(Element ele) throws DocumentException {
+		System.out.println(">>>>>>>>ele:" + ele);
+		WxMsgComponentVerifyTicketEntity result = msgInfoEntityFactorySafe(WxMsgComponentVerifyTicketEntity.class, ele);
+		if (ele.element("ComponentVerifyTicket") != null && !"".equals(ele.element("ComponentVerifyTicket").getStringValue())){
+			System.out.println("ComponentVerifyTicket:" + ele.element("ComponentVerifyTicket").getStringValue());
+			result.setComponentVerifyTicket(strVal(ele, "ComponentVerifyTicket"));
+		}
+		System.out.println("what am I?" + result.getClass().getCanonicalName());
+		System.out.println("am i an authorized?" + (result instanceof WxMsgComponentVerifyTicketEntity));
+		return result;
+	}	
+
+	public static WxMsgAuthorizedEntity getMsgAuthorized(Element ele) throws DocumentException {
+		System.out.println(">>>>>>>>ele:" + ele);
+		WxMsgAuthorizedEntity result = msgInfoEntityFactorySafe(WxMsgAuthorizedEntity.class, ele);
+		if (ele.element("AuthorizerAppid") != null && !"".equals(ele.element("AuthorizerAppid").getStringValue())){
+			System.out.println("AuthorizerAppid:" + ele.element("AuthorizerAppid").getStringValue());
+			result.setAuthorizerAppid(strVal(ele, "AuthorizerAppid"));
+		}
+		if (ele.element("AuthorizationCode") != null && !"".equals(ele.element("AuthorizationCode").getStringValue())){
+			System.out.println("AuthorizationCode:" + ele.element("AuthorizationCode").getStringValue());
+			result.setAuthorizationCode(strVal(ele, "AuthorizationCode"));
+		}
+		if (ele.element("AuthorizationCodeExpiredTime") != null && !"".equals(ele.element("AuthorizationCodeExpiredTime").getStringValue())){
+			System.out.println("AuthorizationCodeExpiredTime:" + ele.element("AuthorizationCodeExpiredTime").getStringValue());
+			result.setAuthorizationCodeExpiredTime(strVal(ele, "AuthorizationCodeExpiredTime"));
+		}		
+		System.out.println("what am I?" + result.getClass().getCanonicalName());
+		System.out.println("am i an authorized?" + (result instanceof WxMsgAuthorizedEntity));
+		return result;
+	}	
+
+	public static WxMsgUnauthorizedEntity getMsgUnauthorized(Element ele) throws DocumentException {
+		System.out.println(">>>>>>>>ele:" + ele);
+		WxMsgUnauthorizedEntity result = msgInfoEntityFactorySafe(WxMsgUnauthorizedEntity.class, ele);
+		if (ele.element("AuthorizerAppid") != null && !"".equals(ele.element("AuthorizerAppid").getStringValue())){
+			System.out.println("AuthorizerAppid:" + ele.element("AuthorizerAppid").getStringValue());
+			result.setAuthorizerAppid(strVal(ele, "AuthorizerAppid"));
+		}
+		System.out.println("what am I?" + result.getClass().getCanonicalName());
+		System.out.println("am i an unauthorized?" + (result instanceof WxMsgUnauthorizedEntity));
+		return result;
+	}	
 	/**
 	 * <code>
 	 * &lt;xml&gt;<br />
@@ -632,6 +679,25 @@ public class WxXmlUtil {
 		}
 	}	
 	
+	private static <T> T msgInfoEntityFactorySafe(
+			Class<? extends WxBaseMsgInfoEntity> clazz, Element ele) {
+		WxBaseMsgInfoEntity result;
+		try {
+			result = clazz.newInstance();
+			if (ele.element("AppId") != null && !"".equals(ele.element("AppId").getStringValue()))
+				result.setAppid(strVal(ele, "AppId"));
+			if (ele.element("CreateTime") != null && !"".equals(ele.element("CreateTime").getStringValue()))						
+				result.setCreateTime(longVal(ele, "CreateTime"));
+			if (ele.element("InfoType") != null && !"".equals(ele.element("InfoType").getStringValue()))	
+				result.setInfoType(strVal(ele, "InfoType"));
+			result.setCreatedDate(new Date());
+			return (T) result;
+		} catch (Exception e) {
+			// never occurs
+			e.printStackTrace();
+			return null;
+		}
+	}	
 //	private static WxMsgEncryptEntity msgEncryptEntityFactory(Element ele){
 //		try {
 //			

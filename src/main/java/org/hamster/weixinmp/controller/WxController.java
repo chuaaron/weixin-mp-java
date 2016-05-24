@@ -81,7 +81,7 @@ public class WxController {
 	public @ResponseBody
 	String post(@RequestBody String requestBody) throws DocumentException,
 			WxException {
-		WxBaseMsgEntity msg = messageService.parseXML(requestBody);
+		WxBaseMsgEntity msg = (WxBaseMsgEntity) messageService.parseXML(requestBody);
 		log.info("received " + msg.getMsgType() + " message.");
 
 		WxBaseRespEntity resp = null;
