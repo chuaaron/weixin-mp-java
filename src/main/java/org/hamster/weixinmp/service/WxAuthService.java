@@ -17,6 +17,7 @@ import org.hamster.weixinmp.dao.entity.auth.WxAuth;
 import org.hamster.weixinmp.dao.entity.auth.WxAuthRefresh;
 import org.hamster.weixinmp.dao.entity.auth.WxAuthReq;
 import org.hamster.weixinmp.dao.entity.auth.WxAuthorizerAuth;
+import org.hamster.weixinmp.dao.entity.auth.WxQueryAuthorizerAuth;
 import org.hamster.weixinmp.exception.WxException;
 import org.hamster.weixinmp.util.WxUtil;
 import org.slf4j.Logger;
@@ -163,7 +164,22 @@ public class WxAuthService {
 				WxComponentPreauthCode.class).getPreAuthCode();
 	}
 	 
+	public WxQueryAuthorizerAuth getAuthorizerInfo(String appid, String authorizerAppId, String componentAccessToken)
+			throws WxException {
+		Map<String, String> requestJson = new HashMap<String, String>();
+		requestJson.put("component_appid", appid);
+		requestJson.put("authorizer_appid", authorizerAppId);
+	
+		System.out.println(requestJson);
 
+		WxQueryAuthorizerAuth wxAuth =  WxUtil.sendRequest(config.getComponentQueryAuthInfoUrl(),
+				HttpMethod.POST,
+				getAccessTokenParams(componentAccessToken),
+				new StringEntity(toJsonString(requestJson), Consts.UTF_8),
+				WxQueryAuthorizerAuth.class);
+		return wxAuth;
+	}
+	
 	public boolean validateAuth(String signature, String timestamp,
 			String nonce, String echostr) throws WxException {
 		WxAuthReq authReq = new WxAuthReq();

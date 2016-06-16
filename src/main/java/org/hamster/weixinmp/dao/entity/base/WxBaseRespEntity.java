@@ -32,4 +32,6 @@ public abstract class WxBaseRespEntity extends WxBaseEntity {
 	protected Long createTime;
 	@Column(name = "msg_type", length = WxConfig.COL_LEN_INDICATOR, nullable = false)
 	protected String msgType;
+	@Column(name = "msg_id", nullable = true)
+	protected Long msgId;
 }

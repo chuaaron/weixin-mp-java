@@ -30,8 +30,10 @@ import org.hamster.weixinmp.dao.entity.msg.WxMsgShortVideoEntity;
 import org.hamster.weixinmp.dao.entity.msg.WxMsgTextEntity;
 import org.hamster.weixinmp.dao.entity.msg.WxMsgInitEntity;
 import org.hamster.weixinmp.dao.entity.msg.WxMsgUnauthorizedEntity;
+import org.hamster.weixinmp.dao.entity.msg.WxMsgUpdateAuthorizedEntity;
 import org.hamster.weixinmp.dao.entity.msg.WxMsgVideoEntity;
 import org.hamster.weixinmp.dao.entity.msg.WxMsgVoiceEntity;
+import org.hamster.weixinmp.dao.entity.resp.WxRespEventEntity;
 import org.hamster.weixinmp.dao.entity.resp.WxRespImageEntity;
 import org.hamster.weixinmp.dao.entity.resp.WxRespMusicEntity;
 import org.hamster.weixinmp.dao.entity.resp.WxRespPicDescEntity;
@@ -381,6 +383,26 @@ public class WxXmlUtil {
 		return result;
 	}	
 
+	public static WxMsgUpdateAuthorizedEntity getMsgUpdateAuthorized(Element ele) throws DocumentException {
+		System.out.println(">>>>>>>>ele:" + ele);
+		WxMsgUpdateAuthorizedEntity result = msgInfoEntityFactorySafe(WxMsgUpdateAuthorizedEntity.class, ele);
+		if (ele.element("AuthorizerAppid") != null && !"".equals(ele.element("AuthorizerAppid").getStringValue())){
+			System.out.println("AuthorizerAppid:" + ele.element("AuthorizerAppid").getStringValue());
+			result.setAuthorizerAppid(strVal(ele, "AuthorizerAppid"));
+		}
+		if (ele.element("AuthorizationCode") != null && !"".equals(ele.element("AuthorizationCode").getStringValue())){
+			System.out.println("AuthorizationCode:" + ele.element("AuthorizationCode").getStringValue());
+			result.setAuthorizationCode(strVal(ele, "AuthorizationCode"));
+		}
+		if (ele.element("AuthorizationCodeExpiredTime") != null && !"".equals(ele.element("AuthorizationCodeExpiredTime").getStringValue())){
+			System.out.println("AuthorizationCodeExpiredTime:" + ele.element("AuthorizationCodeExpiredTime").getStringValue());
+			result.setAuthorizationCodeExpiredTime(strVal(ele, "AuthorizationCodeExpiredTime"));
+		}		
+		System.out.println("what am I?" + result.getClass().getCanonicalName());
+		System.out.println("am i an authorized?" + (result instanceof WxMsgUpdateAuthorizedEntity));
+		return result;
+	}	
+	
 	public static WxMsgUnauthorizedEntity getMsgUnauthorized(Element ele) throws DocumentException {
 		System.out.println(">>>>>>>>ele:" + ele);
 		WxMsgUnauthorizedEntity result = msgInfoEntityFactorySafe(WxMsgUnauthorizedEntity.class, ele);
@@ -408,12 +430,40 @@ public class WxXmlUtil {
 	 * @return
 	 * @throws DocumentException
 	 */
+	
+	public static Element getRespTextXML(WxBaseMsgEntity respText) throws DocumentException {
+		Element ele = respEntityFactory(respText);
+		//ele.addElement("Content").addCDATA(respText.getContent());
+		return ele;
+	}
+	
 	public static Element getRespTextXML(WxRespTextEntity respText) throws DocumentException {
 		Element ele = respEntityFactory(respText);
 		ele.addElement("Content").addCDATA(respText.getContent());
 		return ele;
 	}
 
+//	public static Element getRespTextXML(WxMsgTextEntity respText) throws DocumentException {
+//		Element ele = respEntityFactory(respText);
+//		ele.addElement("Content").addCDATA(respText.getContent());
+//		return ele;
+//	}
+	
+	public static Element getRespEventXML(WxRespEventEntity resp) throws DocumentException {
+		Element ele = respEntityFactory(resp);
+		ele.addElement("Event").addCDATA(resp.getEvent());
+		if (resp.getEventKey() != null && !resp.getEventKey().isEmpty())
+			ele.addElement("EventKey").addCDATA(resp.getEvent());
+		if (resp.getLatitude() != null && resp.getLatitude() != 0L)
+			ele.addElement("Latitude").addCDATA(String.valueOf(resp.getLatitude()));
+		if (resp.getLongitude() != null && resp.getLongitude() != 0L)
+			ele.addElement("Longitude").addCDATA(String.valueOf(resp.getLongitude()));
+		if (resp.getTicket() != null && !resp.getTicket().isEmpty())
+			ele.addElement("Ticket").addCDATA(resp.getTicket());
+		if (resp.getPrecision() != null && resp.getPrecision() != 0L)
+			ele.addElement("Precision").addCDATA(String.valueOf(resp.getPrecision()));		
+		return ele;
+	}
 	/**
 	 * <code>
 	 * &lt;xml&gt;<br />
@@ -718,10 +768,42 @@ public class WxXmlUtil {
 		}
 		ele.addElement("CreateTime").setText(createTime);
 		ele.addElement("MsgType").addCDATA(entity.getMsgType());
-		ele.addElement("FuncFlag").setText(String.valueOf(entity.getFuncFlag()));
+		if (entity.getMsgId() != null){
+			System.out.println(">>>>>" + entity.getMsgId());
+			ele.addElement("MsgId").setText(String.valueOf(entity.getMsgId()));
+		}
+		if (entity.getFuncFlag() != null)
+			ele.addElement("FuncFlag").setText(String.valueOf(entity.getFuncFlag()));
+//		else 
+//			ele.addElement("FuncFlag").setText(String.valueOf("0"));
 		return ele;
 	}
 
+	private static Element respEntityFactory(WxBaseMsgEntity entity) {
+		Element ele = DocumentHelper.createElement("xml");
+		ele.addElement("ToUserName").addCDATA(entity.getToUserName());
+		ele.addElement("FromUserName").addCDATA(entity.getFromUserName());
+		String createTime = String.valueOf(entity.getCreateTime());
+		if (StringUtils.isBlank(createTime)) {
+			Long currentTime = WxUtil.currentTimeInSec();
+			entity.setCreateTime(currentTime);
+			createTime = String.valueOf(currentTime);
+		}
+		ele.addElement("CreateTime").setText(createTime);
+		ele.addElement("MsgType").addCDATA(entity.getMsgType());
+		if (entity.getMsgId() != null){
+			System.out.println(">>>>>" + entity.getMsgId());
+			ele.addElement("MsgId").setText(String.valueOf(entity.getMsgId()));
+		}
+		
+		if (entity instanceof WxMsgTextEntity) {
+			WxMsgTextEntity msgText = (WxMsgTextEntity) entity;
+		}
+//		else 
+//			ele.addElement("FuncFlag").setText(String.valueOf("0"));
+		return ele;
+	}
+	
 	private static String strVal(Element ele, String name) {
 		return ele.element(name).getStringValue();
 	}

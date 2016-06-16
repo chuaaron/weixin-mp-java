@@ -30,6 +30,8 @@ public class WxConfig {
 	private @Value("#{wxProperties.wx_menu_create_url}") String menuCreateUrl;
 	private @Value("#{wxProperties.wx_menu_get_url}") String menuGetUrl;
 	private @Value("#{wxProperties.wx_menu_delete_url}") String menuDeleteUrl;
+
+	private @Value("#{wxProperties.wx_menu_get_keywords}") String keywordsUrl;
 	
 	private @Value("#{wxProperties.wx_access_token_create_url}") String accessTokenCreateUrl;
 	
@@ -51,4 +53,7 @@ public class WxConfig {
 	private @Value("#{wxProperties.wx_component_preauth_code_url}") String componentPreauthCodeUrl;
 	private @Value("#{wxProperties.wx_component_query_auth_url}") String componentQueryAuthUrl;	
 	private @Value("#{wxProperties.wx_component_refresh_token_url}") String componentRefreshTokenUrl;
+	private @Value("#{wxProperties.wx_component_query_auth_info_url}") String componentQueryAuthInfoUrl;
+	private @Value("#{wxProperties.wx_component_default_permissions}") String componentDefaultPermissions;
+
 }

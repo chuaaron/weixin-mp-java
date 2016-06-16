@@ -18,4 +18,5 @@ public class WxMsgRespType {
 	public static final String NEWS = "news";
 	public static final String INIT = "init";	
 	public static final String ENCRYPT = "encrypt";
+	public static final String EVENT = "event";
 }

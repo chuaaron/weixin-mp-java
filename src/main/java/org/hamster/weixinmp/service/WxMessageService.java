@@ -45,6 +45,9 @@ import org.hamster.weixinmp.controller.util.WxXmlUtil;
 import org.hamster.weixinmp.dao.entity.base.WxBaseEntity;
 import org.hamster.weixinmp.dao.entity.base.WxBaseMsgEntity;
 import org.hamster.weixinmp.dao.entity.base.WxBaseRespEntity;
+import org.hamster.weixinmp.dao.entity.msg.WxMsgEventEntity;
+import org.hamster.weixinmp.dao.entity.msg.WxMsgTextEntity;
+import org.hamster.weixinmp.dao.entity.resp.WxRespEventEntity;
 import org.hamster.weixinmp.dao.entity.resp.WxRespImageEntity;
 import org.hamster.weixinmp.dao.entity.resp.WxRespMusicEntity;
 import org.hamster.weixinmp.dao.entity.resp.WxRespPicDescEntity;
@@ -125,7 +128,9 @@ public class WxMessageService {
 		case AUTHORIZED:
 			return WxXmlUtil.getMsgAuthorized(ele);			
 		case UNAUTHORIZED:
-			return WxXmlUtil.getMsgUnauthorized(ele);					
+			return WxXmlUtil.getMsgUnauthorized(ele);	
+		case UPDATEAUTHORIZED:
+			return WxXmlUtil.getMsgUpdateAuthorized(ele);				
 		default:
 			// never happens
 			break;
@@ -189,6 +194,66 @@ public class WxMessageService {
 		result.setFromUserName(fromUserName);
 		result.setMsgType(WxMsgRespType.TEXT);
 		result.setToUserName(toUserName);
+		return result;
+	}
+	
+	public WxRespTextEntity getRespText(WxMsgTextEntity orig) {
+		WxRespTextEntity result = new WxRespTextEntity();
+		String content = orig.getContent();
+		result.setContent(content);
+		result.setCreatedDate(orig.getCreatedDate());
+		result.setCreateTime(orig.getCreateTime());
+		result.setFromUserName(orig.getFromUserName());
+		result.setMsgType(WxMsgRespType.TEXT);
+		result.setToUserName(orig.getToUserName());
+		return result;
+	}
+
+	public WxRespTextEntity getRespTextAuthTest(WxMsgTextEntity orig) {
+		WxRespTextEntity result = new WxRespTextEntity();
+		String content = orig.getContent();
+		result.setContent(content);
+		result.setCreatedDate(orig.getCreatedDate());
+		result.setCreateTime(orig.getCreateTime());
+		result.setFromUserName(orig.getFromUserName());
+		result.setMsgType(WxMsgRespType.TEXT);
+		result.setToUserName(orig.getToUserName());
+		return result;
+	}
+	
+	public WxRespEventEntity getRespEvent(WxMsgEventEntity orig) {
+		WxRespEventEntity result = new WxRespEventEntity();
+		if (orig.getLatitude() != null && orig.getLatitude() != 0L)
+			result.setLatitude(orig.getLatitude());
+		if (orig.getLongitude() != null && orig.getLongitude() != 0L)
+			result.setLongitude(orig.getLongitude());
+		if (orig.getPrecision() != null && orig.getPrecision() != 0L)
+			result.setPrecision(orig.getPrecision());
+		result.setEventKey(orig.getEventKey());
+		result.setEvent(orig.getEvent());
+		result.setCreatedDate(orig.getCreatedDate());
+		result.setCreateTime(orig.getCreateTime());
+		result.setFromUserName(orig.getFromUserName());
+		result.setMsgType(WxMsgRespType.EVENT);
+		result.setToUserName(orig.getToUserName());
+		return result;
+	}
+
+	public WxRespEventEntity getRespEventAuthTest(WxMsgEventEntity orig) {
+		WxRespEventEntity result = new WxRespEventEntity();
+		if (orig.getLatitude() != null && orig.getLatitude() != 0L)
+			result.setLatitude(orig.getLatitude());
+		if (orig.getLongitude() != null && orig.getLongitude() != 0L)
+			result.setLongitude(orig.getLongitude());
+		if (orig.getPrecision() != null && orig.getPrecision() != 0L)
+			result.setPrecision(orig.getPrecision());
+		result.setEventKey(orig.getEventKey());
+		result.setEvent(orig.getEvent());
+		result.setCreatedDate(orig.getCreatedDate());
+		result.setCreateTime(orig.getCreateTime());
+		result.setFromUserName(orig.getFromUserName());
+		result.setMsgType(WxMsgRespType.EVENT);
+		result.setToUserName(orig.getToUserName());
 		return result;
 	}
 	

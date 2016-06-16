@@ -75,32 +75,29 @@ public class WxUtil {
 				EntityUtils.consume(entity);
 			}
 
-			if (String.class.isAssignableFrom(resultClass)) {
-				return (T) respBody;
-			} else {
-				Gson gson = new Gson();
+			Gson gson = new Gson();
 
-				if (respBody.indexOf("{\"errcode\"") == 0
-						|| respBody.indexOf("{\"errmsg\"") == 0) {
-					WxRespCode exJson = gson.fromJson(respBody,
-							WxRespCode.class);
-					if (WxRespCode.class.getName().equals(
-							resultClass.getName())
-							&& exJson.getErrcode() == 0) {
-						return (T) exJson;
-					} else {
-						throw new WxException(exJson);
-					}
+			if (respBody.indexOf("{\"errcode\"") == 0
+					|| respBody.indexOf("{\"errmsg\"") == 0) {
+				WxRespCode exJson = gson.fromJson(respBody,
+						WxRespCode.class);
+				if (WxRespCode.class.getName().equals(
+						resultClass.getName())
+						&& exJson.getErrcode() == 0) {
+					return (T) exJson;
+				} else {
+					throw new WxException(exJson);
 				}
-				System.out.println("respbody:" + respBody);
-//				Type collectionType = new TypeToken<Collection<T>>(){}.getType();
-//				Collection<T> enums = gson.fromJson(respBody, collectionType);
-				T result = gson.fromJson(respBody, resultClass);
-				if (result instanceof WxBaseEntity) {
-					((WxBaseEntity) result).setCreatedDate(new Date());
-				}
-				return result;
+			} else if (String.class.isAssignableFrom(resultClass)) {
+				return (T) respBody;
 			}
+			
+			System.out.println("respbody:" + respBody);
+			T result = gson.fromJson(respBody, resultClass);
+			if (result instanceof WxBaseEntity) {
+				((WxBaseEntity) result).setCreatedDate(new Date());
+			}
+			return result;
 
 		} catch (IOException e) {
 			throw new WxException(e);
