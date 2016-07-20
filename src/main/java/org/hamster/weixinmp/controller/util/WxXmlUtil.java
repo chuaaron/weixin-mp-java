@@ -86,7 +86,6 @@ public class WxXmlUtil {
 	 * @throws DocumentException
 	 */
 	public static WxMsgTextEntity getMsgText(Element ele) throws DocumentException {
-		System.out.println(">>>>>>>>ele:" + ele);
 		WxMsgTextEntity result = msgEntityFactory(WxMsgTextEntity.class, ele);
 		result.setContent(strVal(ele, "Content"));
 		return result;
@@ -326,8 +325,6 @@ public class WxXmlUtil {
 
 	
 	public static WxMsgEncryptEntity getMsgEncrypt(Element ele) throws DocumentException {
-			//WxMsgEncryptEntity result = msgEntityFactory(WxMsgEncryptEntity.class, ele);
-			System.out.println(">>>>>>>>ele:" + ele);
 			WxMsgEncryptEntity result = msgEntityFactorySafe(WxMsgEncryptEntity.class, ele);
 			if (ele.element("AppId") != null && !"".equals(ele.element("AppId").getStringValue())){
 				System.out.println("appid:" + ele.element("AppId").getStringValue());
@@ -337,8 +334,6 @@ public class WxXmlUtil {
 				System.out.println("Encrypt:" + ele.element("Encrypt").getStringValue());				
 				result.setEncrypt(strVal(ele,"Encrypt"));
 			}
-			System.out.println("what am I?" + result.getClass().getCanonicalName());
-			System.out.println("am i an encrypt?" + (result instanceof WxMsgEncryptEntity));
 			return result;
 	}	
 	
@@ -352,66 +347,46 @@ public class WxXmlUtil {
 	}		
 	
 	public static WxMsgComponentVerifyTicketEntity getMsgComponentVerifyTicket(Element ele) throws DocumentException {
-		System.out.println(">>>>>>>>ele:" + ele);
 		WxMsgComponentVerifyTicketEntity result = msgInfoEntityFactorySafe(WxMsgComponentVerifyTicketEntity.class, ele);
 		if (ele.element("ComponentVerifyTicket") != null && !"".equals(ele.element("ComponentVerifyTicket").getStringValue())){
-			System.out.println("ComponentVerifyTicket:" + ele.element("ComponentVerifyTicket").getStringValue());
 			result.setComponentVerifyTicket(strVal(ele, "ComponentVerifyTicket"));
 		}
-		System.out.println("what am I?" + result.getClass().getCanonicalName());
-		System.out.println("am i an authorized?" + (result instanceof WxMsgComponentVerifyTicketEntity));
 		return result;
 	}	
 
 	public static WxMsgAuthorizedEntity getMsgAuthorized(Element ele) throws DocumentException {
-		System.out.println(">>>>>>>>ele:" + ele);
 		WxMsgAuthorizedEntity result = msgInfoEntityFactorySafe(WxMsgAuthorizedEntity.class, ele);
 		if (ele.element("AuthorizerAppid") != null && !"".equals(ele.element("AuthorizerAppid").getStringValue())){
-			System.out.println("AuthorizerAppid:" + ele.element("AuthorizerAppid").getStringValue());
 			result.setAuthorizerAppid(strVal(ele, "AuthorizerAppid"));
 		}
 		if (ele.element("AuthorizationCode") != null && !"".equals(ele.element("AuthorizationCode").getStringValue())){
-			System.out.println("AuthorizationCode:" + ele.element("AuthorizationCode").getStringValue());
 			result.setAuthorizationCode(strVal(ele, "AuthorizationCode"));
 		}
 		if (ele.element("AuthorizationCodeExpiredTime") != null && !"".equals(ele.element("AuthorizationCodeExpiredTime").getStringValue())){
-			System.out.println("AuthorizationCodeExpiredTime:" + ele.element("AuthorizationCodeExpiredTime").getStringValue());
 			result.setAuthorizationCodeExpiredTime(strVal(ele, "AuthorizationCodeExpiredTime"));
 		}		
-		System.out.println("what am I?" + result.getClass().getCanonicalName());
-		System.out.println("am i an authorized?" + (result instanceof WxMsgAuthorizedEntity));
 		return result;
 	}	
 
 	public static WxMsgUpdateAuthorizedEntity getMsgUpdateAuthorized(Element ele) throws DocumentException {
-		System.out.println(">>>>>>>>ele:" + ele);
 		WxMsgUpdateAuthorizedEntity result = msgInfoEntityFactorySafe(WxMsgUpdateAuthorizedEntity.class, ele);
 		if (ele.element("AuthorizerAppid") != null && !"".equals(ele.element("AuthorizerAppid").getStringValue())){
-			System.out.println("AuthorizerAppid:" + ele.element("AuthorizerAppid").getStringValue());
 			result.setAuthorizerAppid(strVal(ele, "AuthorizerAppid"));
 		}
 		if (ele.element("AuthorizationCode") != null && !"".equals(ele.element("AuthorizationCode").getStringValue())){
-			System.out.println("AuthorizationCode:" + ele.element("AuthorizationCode").getStringValue());
 			result.setAuthorizationCode(strVal(ele, "AuthorizationCode"));
 		}
 		if (ele.element("AuthorizationCodeExpiredTime") != null && !"".equals(ele.element("AuthorizationCodeExpiredTime").getStringValue())){
-			System.out.println("AuthorizationCodeExpiredTime:" + ele.element("AuthorizationCodeExpiredTime").getStringValue());
 			result.setAuthorizationCodeExpiredTime(strVal(ele, "AuthorizationCodeExpiredTime"));
 		}		
-		System.out.println("what am I?" + result.getClass().getCanonicalName());
-		System.out.println("am i an authorized?" + (result instanceof WxMsgUpdateAuthorizedEntity));
 		return result;
 	}	
 	
 	public static WxMsgUnauthorizedEntity getMsgUnauthorized(Element ele) throws DocumentException {
-		System.out.println(">>>>>>>>ele:" + ele);
 		WxMsgUnauthorizedEntity result = msgInfoEntityFactorySafe(WxMsgUnauthorizedEntity.class, ele);
 		if (ele.element("AuthorizerAppid") != null && !"".equals(ele.element("AuthorizerAppid").getStringValue())){
-			System.out.println("AuthorizerAppid:" + ele.element("AuthorizerAppid").getStringValue());
 			result.setAuthorizerAppid(strVal(ele, "AuthorizerAppid"));
 		}
-		System.out.println("what am I?" + result.getClass().getCanonicalName());
-		System.out.println("am i an unauthorized?" + (result instanceof WxMsgUnauthorizedEntity));
 		return result;
 	}	
 	/**
@@ -769,7 +744,6 @@ public class WxXmlUtil {
 		ele.addElement("CreateTime").setText(createTime);
 		ele.addElement("MsgType").addCDATA(entity.getMsgType());
 		if (entity.getMsgId() != null){
-			System.out.println(">>>>>" + entity.getMsgId());
 			ele.addElement("MsgId").setText(String.valueOf(entity.getMsgId()));
 		}
 		if (entity.getFuncFlag() != null)
@@ -792,7 +766,6 @@ public class WxXmlUtil {
 		ele.addElement("CreateTime").setText(createTime);
 		ele.addElement("MsgType").addCDATA(entity.getMsgType());
 		if (entity.getMsgId() != null){
-			System.out.println(">>>>>" + entity.getMsgId());
 			ele.addElement("MsgId").setText(String.valueOf(entity.getMsgId()));
 		}
 		

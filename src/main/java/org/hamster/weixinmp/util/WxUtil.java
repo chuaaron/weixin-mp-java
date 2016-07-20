@@ -74,9 +74,7 @@ public class WxUtil {
 			if (entity != null) {
 				EntityUtils.consume(entity);
 			}
-
 			Gson gson = new Gson();
-
 			if (respBody.indexOf("{\"errcode\"") == 0
 					|| respBody.indexOf("{\"errmsg\"") == 0) {
 				WxRespCode exJson = gson.fromJson(respBody,
@@ -92,7 +90,6 @@ public class WxUtil {
 				return (T) respBody;
 			}
 			
-			System.out.println("respbody:" + respBody);
 			T result = gson.fromJson(respBody, resultClass);
 			if (result instanceof WxBaseEntity) {
 				((WxBaseEntity) result).setCreatedDate(new Date());
